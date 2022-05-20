@@ -1,0 +1,140 @@
+<template>
+  <header>
+    
+    <router-link to="/">
+      <h1>NTU EAT</h1>
+    </router-link>
+    
+    <div class="notLoggedin" :class="{'display': status}">
+
+      <router-link to="/signin">登入&nbsp;</router-link>
+      /
+      <router-link to="/signup">&nbsp;註冊</router-link>
+
+    </div>
+    
+    <div class="loggedIn" :class="{'display': status}">
+      
+      <router-link to="/getplaceid">
+        <span class="material-symbols-outlined">edit_note</span>
+      </router-link>
+      
+      <router-link to="#">
+        <span class="material-symbols-outlined">bookmark</span>
+      </router-link>
+      
+      <router-link to="/profile">
+        <img src="https://pse.is/45tncj">
+      </router-link>
+
+    </div>
+  
+  </header>
+</template>
+
+<style scoped lang="scss">
+  
+header{
+  display: flex;
+  background-color: #F0E4D4;
+  align-items: center;
+  justify-content: space-between;
+  h1{
+    margin-left: 18px;
+    font-size: 24px;
+    line-height: 29px;
+    text-align: center;
+    font-weight: 600;
+    color: #575757;
+    display: inline-block;
+  }
+  a{
+    &:first-child{
+      margin-right: 0; 
+    }
+    display: inline-block;
+    line-height: 23px;
+    margin-right: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #707070;
+    text-decoration: none;
+  }
+  .loggedIn{
+    display: none;
+    a{
+      margin: 0 18px 0 0;
+      vertical-align: middle;
+      cursor: pointer;
+      span{
+        vertical-align: middle;
+        font-variation-settings:
+        'wght' 300,
+      }
+    }
+    a{
+      margin: 0 18px 0 0;
+      vertical-align: middle;
+      cursor: pointer;
+      img{
+        display: inline-block;
+        border-radius: 50%;
+        height: 32px;
+        width: 32px;
+        object-fit: cover;
+        vertical-align: middle;
+      }
+    } 
+  }
+  .display.loggedIn{
+    display: inline;
+  }
+  .notLoggedin.display{
+    display: none;
+  }
+}
+</style>
+
+
+<script>
+import { getApi } from '@/GlobalSettings.js'
+
+export default {
+  name: 'NeHeader',
+  
+  data() {
+    return {
+      status: false,
+    }
+  },
+
+  setup() {
+    const api = getApi();
+    return{
+      api
+    }
+  },
+
+  created(){
+    this.checkSignin()
+  },
+  
+  methods: {
+    checkSignin() {
+      const _this = this
+      this.axios.get(_this.api + "user/status/", {withCredentials: true})
+      .then((res) => {
+        if (res.data.data.status === true){
+          errorMsg.isLoggedIn = _this.status
+        } else{
+          const errorMsg = res.data.data.status
+          _this.status = errorMsg.isLoggedIn
+        }
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
+    },
+  }
+}
+</script>
