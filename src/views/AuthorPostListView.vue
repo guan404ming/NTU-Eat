@@ -49,7 +49,7 @@ export default {
     }
   },
 
-  created(){
+  created() {
     this.getUsername()
   },
 
@@ -86,11 +86,11 @@ export default {
       const _this = this
       _this.axios.get(_this.api + 'user/logout/', {withCredentials: true})
       .then((res) => {
-        if (res.data.state === 'success'){
+        if (res.data.state === 'success') {
           console.log(res.data)
           _this.popup('成功登出', '返回首頁', 'success')
           _this.setRedirection()
-        } else{
+        } else {
           const errorMsg = res.data.error
           console.log(errorMsg)
         }

@@ -190,7 +190,7 @@ export default {
       checkbutton.addEventListener('click', () => { this.$router.push('/profile') })
     },
 
-    handleUploadAvatar(){
+    handleUploadAvatar() {
       this.$swal.fire({
         text: '更換你的頭貼',
         showDenyButton: true,

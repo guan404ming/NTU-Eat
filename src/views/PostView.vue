@@ -161,7 +161,7 @@
     },
 
     methods:{
-      deletePost: function(){ 
+      deletePost() { 
         const _this = this
         const postformdata = new FormData()
         postformdata.append('postId', this.postId)

@@ -36,7 +36,7 @@
 
     methods: {
 
-      getAllPost: function(){
+      getAllPost() {
         const _this = this
         _this.axios.get(_this.api + 'post/list/?page=0&eachPage=1', {withCredentials: true})
         .then((res) => {

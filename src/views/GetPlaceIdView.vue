@@ -104,7 +104,7 @@ export default {
 
   methods:{
     
-    initMap: function(){
+    initMap() {
       const map = new google.maps.Map(document.getElementById("map"), {
         zoom: 15,
         mapId: "7f8aa481b333861a",
@@ -155,13 +155,13 @@ export default {
       }
     },
 
-    redirection: function(){
+    redirection() {
       this.popup('成功選擇地點', '建立貼文', 'success')
       var checkbutton = this.$swal.getConfirmButton()
       checkbutton.addEventListener('click', () => { this.$router.push({
         name: 'CreatePost',
         params: this.placeSelector
-      }) })
+      })})
     }
   }
 }

@@ -219,7 +219,7 @@ export default {
       this.isUploaded = true
     },
 
-    handleCreatePost (){
+    handleCreatePost() {
       const _this = this
       const postformdata = new FormData()
       postformdata.append('placeId', _this.place.placeId)
@@ -288,7 +288,7 @@ export default {
       checkbutton.addEventListener('click', () => { this.$router.push('/') })
     },
 
-    deletePicture(){
+    deletePicture() {
       this.photo = []
       this.link = []
       this.isUploaded = false

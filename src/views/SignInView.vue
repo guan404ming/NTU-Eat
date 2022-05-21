@@ -71,7 +71,7 @@ export default {
       checkbutton.addEventListener('click', () => { this.$router.push('/') })
     },
 
-    checkError(errorMsg){
+    checkError(errorMsg) {
       
       //check password error
       if (errorMsg.password === 'noInput'){
