@@ -15,7 +15,7 @@
     
     <div class="loggedIn" :class="{'display': status}">
       
-      <router-link to="/getplaceid">
+      <router-link to="/getplaceid" v-if="userRole > 3">
         <span class="material-symbols-outlined">edit_note</span>
       </router-link>
       
@@ -105,6 +105,7 @@ export default {
   data() {
     return {
       status: false,
+      userRole: null
     }
   },
 
@@ -116,19 +117,20 @@ export default {
   },
 
   created(){
-    this.checkSignin()
+    this.getUserStatus()
   },
   
   methods: {
-    checkSignin() {
+    getUserStatus() {
       const _this = this
       this.axios.get(_this.api + "user/status/", {withCredentials: true})
       .then((res) => {
-        if (res.data.data.status === true){
-          errorMsg.isLoggedIn = _this.status
+        if (res.data.data.status){
+          _this.status = res.data.data.status.isLoggedIn
+          _this.userRole = res.data.data.status.userRole.num
         } else{
           const errorMsg = res.data.data.status
-          _this.status = errorMsg.isLoggedIn
+          console.log(errorMsg)
         }
       })
       .catch(function(error) {
