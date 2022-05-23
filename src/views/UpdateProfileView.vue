@@ -5,10 +5,7 @@
       
       <h1>編輯個人檔案</h1>
       
-      <div class="kkk">
-        <img :src="avatarLink" :class="{'no-pic': removeAvatar}">
-      </div>
-
+      <img :src="avatarLink" :class="{'no-pic': user.removeAvatar}">
       <a @click="this.handleUploadAvatar()">更換您的頭貼</a>
       
       <div class="inputsection">
@@ -18,15 +15,15 @@
 
       <div class="inputsection">
         <h2>暱稱</h2>
-        <input :placeholder= "displayName" v-model="displayName">
+        <input :placeholder= "user.displayName" v-model="user.displayName">
       </div>
 
       <div class="inputsection">
         <h2>自我介紹</h2>
-        <textarea placeholder="請輸入內文" v-model="description"></textarea>
+        <textarea placeholder="請輸入內文" v-model="user.description"></textarea>
       </div>
 
-      <ne-go-button @click="handleUpdateProfile()"></ne-go-button>
+      <ne-go-button @click="handleUpdateProfile(); handleUpdateUsername()"></ne-go-button>
     </div>
   
   </div>  
@@ -42,20 +39,18 @@
       text-align: center;
       margin-top: 38px auto 28px auto;
     }
-    .kkk{
-      img{
-        display: inline-block;
-        margin-top: 10px;
-        border-radius: 50%;
-        height: 16vw;
-        width: 16vw;
-        max-height: 300px;
-        max-height: 300px;
-        object-fit: cover;
-        vertical-align: middle;
-        &.no-pic{
-          display: none;
-        }
+    img{
+      display: inline-block;
+      margin-top: 10px;
+      border-radius: 50%;
+      height: 16vw;
+      width: 16vw;
+      max-height: 300px;
+      max-height: 300px;
+      object-fit: cover;
+      vertical-align: middle;
+      &.no-pic{
+        display: none;
       }
     }
     a{
@@ -127,13 +122,15 @@ export default {
 
   data() {
     return{
-      username: null,
+      user: {
+        targetUserId: null,
+        avatar: null,
+        removeAvatar: false,
+        displayName: '',
+        description: '',
+      },
+      username: null, 
       avatarLink: 'https://pse.is/45tncj',
-      targetUserId: null,
-      avatar: null,
-      removeAvatar: false,
-      displayName: '',
-      description: '',
     }
   },
 
@@ -145,7 +142,7 @@ export default {
       .then((res) => {
         if (res.data.state === 'success'){
           _this.username = res.data.data.user.username
-          _this.targetUserId = res.data.data.user.id
+          _this.user.targetUserId = res.data.data.user.id
         } else{
           const errorMsg = res.data.error
           console.log(errorMsg)
@@ -156,17 +153,56 @@ export default {
       })
     },
 
+    handleUpdateUsername() {
+      const _this = this
+      const usernameformdata = new FormData()
+      usernameformdata.append('username', _this.username)
+
+      _this.axios.post(_this.api + "user/update/username/", usernameformdata, {withCredentials: true})
+      .then((res) => {
+        if (!res.data.state === 'success'){      
+          const errorMsg = res.data.error
+          _this.checkError(errorMsg)
+        }
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
+    },
+
+    checkError(errorMsg) {
+
+      // check username error
+      if (errorMsg.username === "noInput"){
+        _this.popup("請輸入新用戶名稱", "確認", "question")
+      }
+      if (errorMsg.username === "formatError"){
+        _this.popup("用戶名稱格式錯誤", "確認", "error")
+      }
+      if (errorMsg.username === "used"){
+        _this.popup("用戶名稱已被使用", "確認", "error")
+      }
+
+      // check general error
+      if (errorMsg.general === "ServerError"){
+        _this.popup("伺服器錯誤", "請洽客服", "question")
+      }
+      if (errorMsg.general === "unauthorised"){
+        _this.popup("請先登入", "確認", "error")
+      }
+    },
+
     handleUpdateProfile (){
       const _this = this
       const profileformdata = new FormData()
-      // profileformdata.append('targetUserId', _this.targetUserId)
-      if(!_this.removeAvatar){
-        profileformdata.append('avatar', _this.avatar)
+      // profileformdata.append('targetUserId', _this.user.targetUserId)
+      if(!_this.user.removeAvatar){
+        profileformdata.append('avatar', _this.user.avatar)
       }else{
-        profileformdata.append('removeAvatar', _this.removeAvatar)
+        profileformdata.append('removeAvatar', _this.user.removeAvatar)
       }
-      profileformdata.append('displayName', _this.displayName)
-      profileformdata.append('description', _this.description)
+      profileformdata.append('displayName', _this.user.displayName)
+      profileformdata.append('description', _this.user.description)
       
       
       _this.axios.post(_this.api + 'update/profile/', profileformdata, {withCredentials: true})
@@ -225,9 +261,9 @@ export default {
             }
           }).then((res) => {
             const link = URL.createObjectURL(res.value)
-            this.avatar = res.value
+            this.user.avatar = res.value
             this.avatarLink = link
-            this.removeAvatar = false
+            this.user.removeAvatar = false
           }).catch((error) => {
             console.log(error)
           })

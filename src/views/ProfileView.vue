@@ -4,12 +4,14 @@
     
     <h1>{{username}}</h1>
 
-    <router-link to="/updateprofile">
+    <img :src="avatarLink" v-if="userRole > 3">
+
+    <router-link to="/updateprofile" v-if="userRole > 3">
       <span class="material-symbols-outlined">edit</span>
       <button>編輯個人檔案</button>
     </router-link>
 
-    <router-link to="/authorpostlist">
+    <router-link to="/authorpostlist" v-if="userRole > 3">
       <span class="material-symbols-outlined">sticky_note_2</span>
       <button>您的貼文們</button>
     </router-link>
@@ -19,7 +21,7 @@
       <button>更改密碼</button>
     </router-link>
 
-    <router-link to="/updateusername">
+    <router-link to="/updateusername" v-if="userRole <= 3">
       <span class="material-symbols-outlined">lock</span>
       <button>更改用戶名稱</button>
     </router-link>
@@ -37,6 +39,15 @@
     h1{
       text-align: center;
       margin: 38px auto 54px auto;
+    }
+    img{
+      margin-left: calc(50% - 8vw);
+      margin-top: -24px;
+      margin-bottom: 36px;
+      border-radius: 50%;
+      height: 16vw;
+      width: 16vw;
+      object-fit: cover;
     }
     a{
       margin: 0px auto 26px auto;
@@ -103,23 +114,26 @@ export default {
   },
 
   created(){
-    this.getUsername()
+    this.getUserInfo()
   },
 
   data() {
     return{
       username: '',
+      userRole: null,
+      avatarLink: 'https://pse.is/45tncj',
     } 
   },
 
   methods: {
 
-    getUsername() {
+    getUserInfo() {
       const _this = this
       _this.axios.get(_this.api + 'user/info/', {withCredentials: true})
       .then((res) => {
         if (res.data.state === 'success'){
           _this.username = res.data.data.user.username
+          _this.userRole = res.data.data.user.userRole.num
         } else{
           const errorMsg = res.data.error
           console.log(errorMsg)
