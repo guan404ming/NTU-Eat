@@ -4,9 +4,15 @@
     <ne-searchbar></ne-searchbar>
     <ne-pop-post-container></ne-pop-post-container>
     <h2>發現更多</h2>
-    <ne-post src="https://pse.is/46c9dc"/>
-    <ne-post src="https://pse.is/46fklc"/>
-    <ne-post src="https://pse.is/475zrw"/>
+    <ne-post
+      :key="i"
+      v-for="(post, i) in posts"
+      :src="post.post.images[0]"
+      :authorname="post.author.username"
+      :locname="post.location.name"
+      :avatar="post.author.avatar[0].filename"
+      :postId="post.postId"
+    ></ne-post>
   </div>
 </template>
 
@@ -15,6 +21,7 @@ import NeHeader from '@/components/NeHeader.vue'
 import NeSearchbar from '@/components/NeSearchbar.vue'
 import NePopPostContainer from '@/components/NePopPostContainer.vue'
 import NePost from '@/components/NePost.vue'
+import { getApi} from "@/GlobalSettings.js";
 
 export default {
   name: 'HomeView',
@@ -24,6 +31,44 @@ export default {
     NePopPostContainer,
     NePost,
   },
+
+  setup() {
+    const api = getApi();
+    return {
+      api,
+    };
+  },
+
+  data() {
+    return {
+      posts: null,
+    };
+  },
+
+  created() {
+    this.getAllPost();
+  },
+
+  methods: {
+    getAllPost() {
+      const _this = this;
+      _this.axios
+        .get(_this.api + "post/list/?page=0&eachPageNum=4&", {
+          withCredentials: true,
+        })
+        .then((res) => {
+          if (res.data.state === "success") {
+            this.posts = res.data.data.posts;
+          } else {
+            const errorMsg = res.data.error;
+            console.log(errorMsg);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+  }
 }
 
 </script>

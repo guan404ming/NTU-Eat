@@ -37,7 +37,7 @@ const routes = [
     component: ForgetPasswordView
   },
   {
-    path: '/post',
+    path: '/post/:postId',
     name: 'Post',
     component: PostView
   },
