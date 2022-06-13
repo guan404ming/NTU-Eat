@@ -202,6 +202,7 @@ export default {
       photo: [],
       link: [],
       isUploaded: false,
+      postId: null
     }
   },
 
@@ -233,7 +234,7 @@ export default {
       _this.axios.post(_this.api + 'post/create/', postformdata, {withCredentials: true})
       .then((res) => {
         if (res.data.state === 'success'){
-          console.log(res)
+          this.findNewestPost()
           _this.popup('文章已成功發布', '現在查看', 'success')
           this.setRedirection()
         } else{
@@ -283,16 +284,56 @@ export default {
       }
     },
 
-    setRedirection() {
-      var checkbutton = this.$swal.getConfirmButton()
-      checkbutton.addEventListener('click', () => { this.$router.push('/') })
-    },
-
     deletePicture() {
       this.photo = []
       this.link = []
       this.isUploaded = false
-    }
+    },
+
+    getUserId() {
+      const _this = this
+      _this.axios.get(_this.api + 'user/info/', {withCredentials: true})
+      .then((res) => {
+        if (res.data.state === 'success'){
+          var userId = res.data.data.user.id
+          return userId
+        } else{
+          const errorMsg = res.data.error
+          console.log(errorMsg)
+        }
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
+    },
+
+    findNewestPost() {
+      const _this = this;
+      const userId = this.getUserId()
+      _this.axios
+        .get(_this.api + "post/list/?orderby=CR_DATE_DESC&a=" + userId, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          if (res.data.state === "success") {
+            this.postId = res.data.data.posts[0].postId
+            console.log(this.postId)
+          } else {
+            const errorMsg = res.data.error;
+            console.log(errorMsg);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+
+    setRedirection() {
+      var checkbutton = this.$swal.getConfirmButton()
+      checkbutton.addEventListener('click', () => { 
+        this.$router.push('/post/' + this.postId) 
+      })
+    },
   },
 
   watch:{
