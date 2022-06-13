@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="isDone">
     <ne-header></ne-header>
     <div class="container">
       <h1>{{ post.location.name }}</h1>
@@ -52,6 +52,7 @@
   h1 {
     width: calc(100% - 60px);
     margin-bottom: 10px;
+    margin-top: 18px;
     font-size: 28px;
     text-overflow: ellipsis;
     display: inline-block;
@@ -163,23 +164,7 @@ export default {
   },
 
   created() {
-    const _this = this;
-    this.postId = this.$route.params.postId;
-    _this.axios
-      .get(_this.api + "post/list/by-id/?p=" + _this.postId, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.state === "success") {
-          this.post = res.data.data.post;
-        } else {
-          const errorMsg = res.data.error;
-          console.log(errorMsg);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    this.CreatePostView(this.$route.params);
   },
 
   setup() {
@@ -192,8 +177,9 @@ export default {
 
   data() {
     return {
-      postId: null,
+      postId: 0,
       post: null,
+      isDone: false
     };
   },
 
@@ -210,6 +196,27 @@ export default {
         .then((res) => {
           if (res.data.state === "success") {
             console.log(res);
+          } else {
+            const errorMsg = res.data.error;
+            console.log(errorMsg);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+
+    CreatePostView(params) {
+      const _this = this;
+      this.postId = params.postId ?? 0;
+      _this.axios
+        .get(_this.api + "post/list/by-id/?p=" + _this.postId, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          if (res.data.state === "success") {
+            this.post = res.data.data.post;
+            this.isDone = true
           } else {
             const errorMsg = res.data.error;
             console.log(errorMsg);

@@ -3,7 +3,7 @@
     <div class="post-info">
       <div class="author">
         <img :src="'http://140.112.239.6/ntu-eat/data-img/user/' + avatar" />
-        <p>Wesley Chiu</p>
+        <p>{{authorname}}</p>
       </div>
 
       <div class="locname">
