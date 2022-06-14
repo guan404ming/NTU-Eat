@@ -24,7 +24,7 @@
       </router-link>
       
       <router-link to="/profile">
-        <img src="https://pse.is/45tncj">
+        <img :src="avatar">
       </router-link>
 
     </div>
@@ -105,7 +105,8 @@ export default {
   data() {
     return {
       status: false,
-      userRole: null
+      userRole: null,
+      avatar: null
     }
   },
 
@@ -128,6 +129,9 @@ export default {
         if (res.data.data.status){
           _this.status = res.data.data.status.isLoggedIn
           _this.userRole = res.data.data.status.userRole.num
+          if (this.userRole >= 5) {
+            this.getAvatar()
+          }
         } else{
           const errorMsg = res.data.data.status
           console.log(errorMsg)
@@ -137,6 +141,22 @@ export default {
         console.log(error)
       })
     },
+
+    getAvatar() {
+      const _this = this
+      this.axios.get(_this.api + "user/info/", {withCredentials: true})
+      .then((res) => {
+        if (res.data.data){
+          this.avatar = 'http://140.112.239.6/ntu-eat/data-img/user/' + res.data.data.superUser.avatar[0].filename
+        } else{
+          const errorMsg = res.data.data
+          console.log(errorMsg)
+        }
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
+    }
   }
 }
 </script>
