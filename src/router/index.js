@@ -82,7 +82,7 @@ const routes = [
     component: GetPlaceIdView
   },
   {
-    path: '/authorpostlist',
+    path: '/authorpostlist/:userId',
     name: 'authorpostlist',
     component: AuthorPostListView
   },

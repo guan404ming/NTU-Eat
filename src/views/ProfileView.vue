@@ -10,7 +10,7 @@
       <button>編輯個人檔案</button>
     </router-link>
 
-    <router-link to="/authorpostlist" v-if="userRole > 3">
+    <router-link :to="'/authorpostlist/' + userId" v-if="userRole > 3">
       <span class="material-symbols-outlined">sticky_note_2</span>
       <button>您的貼文們</button>
     </router-link>
@@ -119,6 +119,7 @@ export default {
       username: "",
       userRole: null,
       avatar: null,
+      userId: null
     };
   },
 
@@ -134,6 +135,7 @@ export default {
             this.avatar =
               "http://140.112.239.6/ntu-eat/data-img/user/" +
               res.data.data.superUser.avatar[0].filename;
+            this.userId = res.data.data.user.id
           } else {
             const errorMsg = res.data.error;
             console.log(errorMsg);

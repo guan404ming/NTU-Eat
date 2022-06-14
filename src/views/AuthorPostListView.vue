@@ -1,7 +1,7 @@
 <template>
   <ne-header></ne-header>
-  <div class="container">
-    <h1>{{ username }}</h1>
+  <div class="container" v-if="isDone">
+    <h1>{{ posts[0].author.username }}</h1>
     <ne-post
       :key="i"
       v-for="(post, i) in posts"
@@ -52,46 +52,31 @@ export default {
   },
 
   created() {
-    this.findNewestPost();
+    this.getAuthorPost();
   },
 
   data() {
     return {
       posts: null,
-      username: null,
+      isDone: false,
     };
   },
 
   methods: {
-    getUserInfo() {
+    getAuthorPost() {
       const _this = this;
+      const userId = this.$route.params.userId;
       _this.axios
-        .get(_this.api + "user/info/", { withCredentials: true })
-        .then((res) => {
-          if (res.data.state === "success") {
-            var userId = res.data.data.user.id;
-            this.username = res.data.data.user.username;
-            return userId;
-          } else {
-            const errorMsg = res.data.error;
-            console.log(errorMsg);
+        .get(
+          _this.api + "post/list/by-author/?orderby=CR_DATE_DESC&a=" + userId,
+          {
+            withCredentials: true,
           }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-
-    findNewestPost() {
-      const _this = this;
-      const userId = this.getUserInfo();
-      _this.axios
-        .get(_this.api + "post/list/?orderby=CR_DATE_DESC&a=" + userId, {
-          withCredentials: true,
-        })
+        )
         .then((res) => {
           if (res.data.state === "success") {
             this.posts = res.data.data.posts;
+            this.isDone = true;
           } else {
             const errorMsg = res.data.error;
             console.log(errorMsg);

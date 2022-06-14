@@ -4,9 +4,9 @@
     <div class="container">
       <h1>{{ post.location.name }}</h1>
 
-      <div class="icon">
+      <div class="icon" v-if="post.author.userId === currentUser">
         <button><span class="material-symbols-outlined">edit</span></button>
-        <button @click="deletePost()">
+        <button @click="ensureRemove()">
           <span class="material-symbols-outlined">delete</span>
         </button>
       </div>
@@ -35,11 +35,11 @@
           post.author.avatar[0].filename
         "
       />
-      <div>
+      <router-link :to="'/authorpostlist/' + post.author.userId">
         <p class="">作者簡介</p>
         <p class="name">{{ post.author.username }}</p>
         <p class="intro">{{ post.author.description }}</p>
-      </div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -123,10 +123,11 @@
 .author {
   margin: 26px;
   display: flex;
-  div {
+  a {
     margin-left: 16px;
     display: inline-block;
     font-size: 12px;
+    text-decoration: none;
     line-height: 14px;
     color: #707070;
     p {
@@ -164,7 +165,8 @@ export default {
   },
 
   created() {
-    this.CreatePostView(this.$route.params);
+    this.createPostView(this.$route.params);
+    this.getUserInfo()
   },
 
   setup() {
@@ -177,27 +179,29 @@ export default {
 
   data() {
     return {
-      postId: 0,
+      postId: null,
       post: null,
-      isDone: false
+      isDone: false,
+      currentUser: null
     };
   },
 
   methods: {
-    deletePost() {
+    removePost() {
       const _this = this;
       const postformdata = new FormData();
       postformdata.append("postId", this.postId);
 
       _this.axios
-        .get(_this.api + "post/remove/", postformdata, {
+        .post(_this.api + "post/remove/", postformdata, {
           withCredentials: true,
         })
         .then((res) => {
           if (res.data.state === "success") {
-            console.log(res);
+            this.popup('成功刪除貼文', '返回首頁', 'success')
+            this.setRedirection()
           } else {
-            const errorMsg = res.data.error;
+            const errorMsg = res.data;
             console.log(errorMsg);
           }
         })
@@ -206,7 +210,22 @@ export default {
         });
     },
 
-    CreatePostView(params) {
+    setRedirection() {
+      var checkbutton = this.$swal.getConfirmButton()
+      checkbutton.addEventListener('click', () => {
+        this.$router.push('/') 
+      })
+    },
+
+    ensureRemove() {
+      this.popup('確定刪除貼文?', '確定', 'question')
+      var checkbutton = this.$swal.getConfirmButton()
+      checkbutton.addEventListener('click', () => {
+        this.removePost()
+      })
+    },
+
+    createPostView(params) {
       const _this = this;
       this.postId = params.postId ?? 0;
       _this.axios
@@ -219,7 +238,25 @@ export default {
             this.isDone = true
           } else {
             const errorMsg = res.data.error;
-            console.log(errorMsg);
+            console.log(errorMsg)
+            this.popup('無此貼文', '返回首頁', 'question')
+            this.setRedirection()
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+
+    getUserInfo() {
+      const _this = this;
+      _this.axios
+        .get(_this.api + "user/info/", { withCredentials: true })
+        .then((res) => {
+          if (res.data.state === "success") {
+            this.currentUser = res.data.data.user.id;
+          } else {
+            const errorMsg = res.data.error;
           }
         })
         .catch(function (error) {
