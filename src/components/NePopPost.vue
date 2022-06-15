@@ -1,27 +1,16 @@
 <template>
-  <router-link class="post" :to="'/post/'+ postId">
-    <img :src="'http://140.112.239.6/ntu-eat/data-img/post/' + src" />
-    <p class="authorname">{{ authorname }}</p>
-    <p class="locname">{{ locname }}</p>
+  <router-link class="post" :to="'/post/'+ post.postId">
+    <img :src="'http://140.112.239.6/ntu-eat/data-img/post/' + post.post.images[0]" />
+    <p class="authorname">{{ post.author.username }}</p>
+    <p class="locname">{{ post.location.name }}</p>
   </router-link>
 </template>
 
 <script>
-import { getApi } from "@/GlobalSettings.js";
 export default {
   name: "NePopPost",
   props: {
-    src: String,
-    authorname: String,
-    locname: String,
-    postId: String,
-  },
-
-  setup() {
-    const api = getApi();
-    return {
-      api,
-    };
+    post: Object,
   },
 };
 </script>

@@ -7,10 +7,7 @@
     <ne-pop-post
       :key="i"
       v-for="(post, i) in posts"
-      :src="post.post.images[0]"
-      :authorname="post.author.username"
-      :locname="post.location.name"
-      :postId="post.postId"
+      :post="post"
     ></ne-pop-post>
 
   </div>

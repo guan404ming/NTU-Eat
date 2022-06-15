@@ -1,13 +1,13 @@
 <template>
-  <router-link class="post" :to="'/post/'+ postId">
+  <router-link class="post" :to="'/post/'+ post.postId">
     <div class="post-info">
       <div class="author">
-        <img :src="'http://140.112.239.6/ntu-eat/data-img/user/' + avatar" />
-        <p>{{authorname}}</p>
+        <img :src="'http://140.112.239.6/ntu-eat/data-img/user/' + post.author.avatar[0].filename" />
+        <p>{{post.author.username}}</p>
       </div>
 
       <div class="locname">
-        <p>{{ locname }}</p>
+        <p>{{ post.location.name }}</p>
       </div>
 
       <div class="loc-info">
@@ -17,7 +17,7 @@
         </p>
       </div>
     </div>
-    <img :src="'http://140.112.239.6/ntu-eat/data-img/post/' + src" />
+    <img :src="'http://140.112.239.6/ntu-eat/data-img/post/' + post.post.images[0]" />
   </router-link>
 </template>
 
@@ -25,11 +25,7 @@
 export default {
   name: "NePost",
   props: {
-    src: String,
-    authorname: String,
-    locname: String,
-    avatar: String,
-    postId: String,
+    post: Object
   },
 };
 </script>

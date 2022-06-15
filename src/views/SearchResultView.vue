@@ -6,15 +6,12 @@
       <ne-pop-post
         :key="i"
         v-for="(post, i) in posts"
-        :src="post.post.images[0]"
-        :authorname="post.author.username"
-        :locname="post.location.name"
-        :postId="post.postId"
+        :post="post"
       ></ne-pop-post>
       <ne-pop-post
         v-if="posts.length % 2 !== 0 && posts.length !== 0"
         style="visibility: hidden"
-        :src="posts[0].post.images[0]"
+        :post="posts[0]"
       ></ne-pop-post>
     </div>
   </div>

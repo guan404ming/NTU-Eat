@@ -55,13 +55,3 @@
   }
 
 </style>
-
-<script>
-  import NeHeader from '@/components/NeHeader.vue'
-  
-  export default{
-    components:{
-      NeHeader
-    }
-  }
-</script>

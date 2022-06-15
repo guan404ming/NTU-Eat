@@ -7,11 +7,7 @@
     <ne-post
       :key="i"
       v-for="(post, i) in posts"
-      :src="post.post.images[0]"
-      :authorname="post.author.username"
-      :locname="post.location.name"
-      :avatar="post.author.avatar[0].filename"
-      :postId="post.postId"
+      :post="post"
     ></ne-post>
   </div>
 </template>
