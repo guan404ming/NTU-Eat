@@ -14,6 +14,7 @@ import UpdatePasswordView from '../views/UpdatePasswordView.vue'
 import GetPlaceIdView from '../views/GetPlaceIdView.vue'
 import AuthorPostListView from '../views/AuthorPostListView.vue'
 import UpdateProfileView from '../views/UpdateProfileView.vue'
+import SearchResultView from '../views/SearchResultView.vue'
 
 const routes = [
   {
@@ -90,6 +91,11 @@ const routes = [
     path: '/updateprofile',
     name: 'updateprofile',
     component: UpdateProfileView
+  },
+  {
+    path: '/searchresult/:parameters',
+    name: 'searchresult',
+    component: SearchResultView
   },
 ]
 
