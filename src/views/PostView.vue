@@ -12,11 +12,12 @@
       </div>
 
       <a>{{ post.location.address }}</a>
-      <img
-        :src="
-          'http://140.112.239.6/ntu-eat/data-img/post/' + post.post.images[0]
-        "
-      />
+      
+      <Swiper :modules="modules"
+        :pagination="{ clickable: true }">
+	      <swiper-slide v-for="(image, i) in post.post.images" :key="i"><img :src="'http://140.112.239.6/ntu-eat/data-img/post/' + image"/></swiper-slide>
+      </Swiper>
+
       <VueShowdown class="content">{{ post.post.content }}</VueShowdown>
       <div class="tags" v-if="post.post.tags.length > 0">
         <button :key="i" v-for="(tag, i) in post.post.tags">
@@ -95,6 +96,9 @@
     width: 100%;
     display: inline-block;
   }
+  :deep .swiper-pagination-bullet{
+    background-color: #c9c9c9;
+  }
   .content {
     margin-top: 14px;
     color: #707070;
@@ -161,11 +165,18 @@
 <script>
 import NeHeader from "@/components/NeHeader.vue";
 import { getApi, popup } from "@/GlobalSettings";
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import 'swiper/css'
+import { Navigation, Pagination } from 'swiper'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
 
 export default {
   name: "PostView",
   components: {
     NeHeader,
+    Swiper,
+    SwiperSlide
   },
 
   created() {
@@ -178,6 +189,7 @@ export default {
     return {
       api,
       popup,
+      modules: [Navigation, Pagination]
     };
   },
 

@@ -25,11 +25,19 @@
       <div class="inputsection">
         <div class="title">
           <h2 id="content">內文</h2>
-          <button @click="isMarkdown = true" v-if="!isMarkdown"><span class="material-symbols-outlined">visibility</span></button>
-          <button @click="isMarkdown = false" v-if="isMarkdown"><span class="material-symbols-outlined">visibility_off</span></button>
+          <button @click="isMarkdown = true" v-if="!isMarkdown">
+            <span class="material-symbols-outlined">visibility</span>
+          </button>
+          <button @click="isMarkdown = false" v-if="isMarkdown">
+            <span class="material-symbols-outlined">visibility_off</span>
+          </button>
         </div>
-        <textarea placeholder="推一下喝價的食物們" v-model="content" v-if="!isMarkdown"></textarea>
-        <VueShowdown class="textarea" :markdown="content" v-if="isMarkdown"/>
+        <textarea
+          placeholder="推一下喝價的食物們"
+          v-model="content"
+          v-if="!isMarkdown"
+        ></textarea>
+        <VueShowdown class="textarea" :markdown="content" v-if="isMarkdown" />
       </div>
 
       <div class="inputsection">
@@ -46,9 +54,16 @@
           />
         </div>
 
-        <div :class="{ uploaded: isUploaded }" class="preview">
-          <img v-for="src in link" :key="src.id" :src="src" />
-        </div>
+        <Swiper
+          :modules="modules"
+          :pagination="{ clickable: true }"
+          :class="{ uploaded: isUploaded }"
+          class="preview"
+        >
+          <swiper-slide v-for="src in link" :key="src.id"
+            ><img :src="src"
+          /></swiper-slide>
+        </Swiper>
 
         <div :class="{ uploaded: isUploaded }" class="controlbar">
           <button>
@@ -81,7 +96,7 @@
     margin-top: 38px auto 28px auto;
   }
   h2 {
-    &#content{
+    &#content {
       display: inline;
     }
     margin: 0px auto 6px 11vw;
@@ -92,25 +107,25 @@
   }
   .inputsection {
     display: block;
-    .title{
+    .title {
       text-align: left;
-      button{
+      button {
         border: none;
         background-color: #fff;
         vertical-align: middle;
         opacity: 0.8;
         padding-bottom: 2px;
         margin-left: 0px;
-        &:hover{
+        &:hover {
           cursor: pointer;
           opacity: 1;
         }
-        span{
+        span {
           display: inline;
           text-align: left;
           font-size: 16px;
           color: #707070;
-          font-variation-settings: 'FILL' 1;
+          font-variation-settings: "FILL" 1;
         }
       }
     }
@@ -144,10 +159,12 @@
       color: #707070;
       font-size: 14px;
       margin-bottom: 20px;
-      :deep h1, h2, h3{
+      :deep h1,
+      h2,
+      h3 {
         margin-top: 0px;
       }
-      :deep ul{
+      :deep ul {
         padding-left: 20px;
       }
     }
@@ -181,8 +198,6 @@
     .preview {
       display: none;
       margin: 0 auto 16px auto;
-      white-space: nowrap;
-      overflow: scroll;
       justify-content: stretch;
       align-content: center;
       height: 32vh;
@@ -197,8 +212,12 @@
       img {
         display: inline;
         border-radius: 24px;
-        object-fit: cover;
-        width: 77vw;
+        object-fit: fit;
+        height: 32vh;
+        width: 76vw;
+      }
+      :deep .swiper-pagination-bullet{
+        background-color: #c9c9c9;
       }
     }
     .controlbar {
@@ -283,6 +302,11 @@ import NeGoButton from "@/components/NeGoButton.vue";
 import Multiselect from "@vueform/multiselect";
 import "@vueform/multiselect/themes/default.css";
 import { getApi, popup } from "@/GlobalSettings.js";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import "swiper/css";
+import { Navigation, Pagination } from "swiper";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 export default {
   name: "CreatePost",
@@ -290,6 +314,8 @@ export default {
     NeHeader,
     NeGoButton,
     Multiselect,
+    Swiper,
+    SwiperSlide,
   },
 
   setup() {
@@ -297,6 +323,7 @@ export default {
     return {
       api,
       popup,
+      modules: [Navigation, Pagination],
     };
   },
 
