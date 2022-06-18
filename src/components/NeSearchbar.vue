@@ -68,18 +68,15 @@
       </div>
 
       <div class="type" v-if="choosedOption == 'type'">
-        <button @click="selectType('義大利麵義大麵義大')">義大利麵</button>
-        <button @click="selectType('焗烤')">焗烤</button>
-        <button @click="selectType('甜點')">甜點</button>
-        <button @click="selectType('蒸餃')">蒸餃</button>
-        <button @click="selectType('燒烤')">燒烤</button>
-        <button @click="selectType('港式飲茶')">港式飲茶</button>
+        <button :key="i" v-for="(tag, i) in tags" @click="selectType(tag.name)">{{tag.name}}</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getApi, popup } from "@/GlobalSettings";
+
 export default {
   name: "NeSearchbar",
   props: {},
@@ -94,9 +91,23 @@ export default {
       },
       choosedOption: null,
       parameters: "location=25.017951,121.539625",
+      tags: null,
       isDone: false,
     };
   },
+
+  created() {
+    this.getTags()
+  },
+
+  setup() {
+    const api = getApi();
+    return {
+      api,
+      popup,
+    };
+  },
+
   methods: {
     selectOption(option) {
       if (this.choosedOption != option) {
@@ -129,15 +140,13 @@ export default {
       }
 
       if (this.query.price !== null) {
-        this.parameters += "&max=" + this.query.price.length;
-      } else {
-        this.parameters += "&max=" + "3";
+        this.parameters += "&maxprice=" + this.query.price.length;
       }
 
       if (this.query.distance) {
         this.parameters += "&radius=" + this.query.distance;
       } else {
-        this.parameters += "&radius=1500";
+        this.parameters += "&radius=" + 20000;
       }
 
       if (this.query.opening) {
@@ -145,17 +154,36 @@ export default {
       }
       this.isDone = true;
     },
+
+    getTags() {
+      const _this = this
+      _this.axios
+        .get(this.api + "tag/list/?page=0&eachPageNum=8&drop=NOT_USED&orderby=FREQ_ASC", {
+          withCredentials: true,
+        })
+        .then((res) => {
+          if (res.data.state === "success") {
+            this.tags = res.data.data.tags
+          } else {
+            const errorMsg = res.data;
+            console.log(errorMsg);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   },
+
   watch: {
     isDone: function(){
       this.$router.push({
-          path: "/searchresult/" + this.parameters,
+          path: `/searchresult/${this.parameters}/${this.query.type}`
       })
     }
   }
 };
 </script>
-
 
 <style scoped lang="scss">
 .searchbar {
@@ -221,6 +249,8 @@ export default {
         max-width: calc((100vw - 66px) / 4 - 20px);
         overflow: scroll;
         margin: 0px;
+        margin-top: 2px;
+        margin-bottom: -1px;
       }
       &.active {
         background-color: #efefef;

@@ -58,24 +58,33 @@ export default {
           withCredentials: true,
         })
         .then((res) => {
-          if (res.data.state === "success") {
-            if (res.data.data.posts.length > 0) {
-              res.data.data.posts.forEach((element) => {
-                this.posts.push(element);
-              });
-            }
-          } else {
-            const errorMsg = res.data.error;
-            console.log(errorMsg);
-          }
+          this.checklimitation(res)
         })
         .catch(function (error) {
           console.log(error);
         });
     },
+
+    checklimitation(res) {
+      if (res.data.state === "success" && res.data.data.posts.length > 0) {
+        res.data.data.posts.forEach((element) => {
+          var hasTag = false
+          element.post.tags.forEach((el) => {
+          if (el.name === this.$route.params.tag){
+            hasTag = true;
+          }
+          })
+          if (this.$route.params.tag==='null' || hasTag){
+            this.posts.push(element);
+          }
+        });
+      }
+    },
+
     getGoogleApi() {
-      const apiKey = "&key=AIzaSyBv1bZpr-pLSgw6cnTkpexgcFgY40F3j0w";
+      const apiKey = "key=AIzaSyBv1bZpr-pLSgw6cnTkpexgcFgY40F3j0w";
       var url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?${apiKey}&${this.$route.params.parameters}`;
+      // console.log(url)
       this.axios
         .get(url)
         .then((res) => {
@@ -85,6 +94,29 @@ export default {
             });
           } else {
             console.log(res);
+          }
+          if (this.posts.length == 0) {
+            console.log(this.posts)
+            this.getAllPost()
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+
+    getAllPost() {
+      const _this = this;
+      _this.axios
+        .get(_this.api + "post/list/?page=0&eachPageNum=8&", {
+          withCredentials: true,
+        })
+        .then((res) => {
+          if (res.data.state === "success") {
+            this.posts = res.data.data.posts;
+          } else {
+            const errorMsg = res.data.error;
+            console.log(errorMsg);
           }
         })
         .catch(function (error) {
@@ -112,8 +144,8 @@ div {
       margin-bottom: 12px;
       :deep .authorname,
       :deep .locname {
-        margin-left: auto;
-        margin-right: auto;
+        margin-left: 12px;
+        margin-right: 12px;
       }
     }
   }

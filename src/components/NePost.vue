@@ -1,9 +1,10 @@
 <template>
-  <router-link class="post" :to="'/post/'+ post.postId">
+  <div v-if="isLoaded">
+    <router-link class="post" :to="'/post/'+ post.postId">
     <div class="post-info">
       <div class="author">
         <img :src="'http://140.112.239.6/ntu-eat/data-img/user/' + post.author.avatar[0].filename" />
-        <p>{{post.author.username}}</p>
+        <p>{{post.author.username }}</p>
       </div>
 
       <div class="locname">
@@ -12,13 +13,15 @@
 
       <div class="loc-info">
         <p>
-          台灣菜・
-          <span class="price">$$</span>
+          {{firstTag +"・"}}
+          <span class="price">{{price[post.location.price]}}</span>
         </p>
       </div>
     </div>
     <img :src="'http://140.112.239.6/ntu-eat/data-img/post/' + post.post.images[0]" />
-  </router-link>
+    </router-link>
+  </div>
+  
 </template>
 
 <script>
@@ -26,6 +29,22 @@ export default {
   name: "NePost",
   props: {
     post: Object
+  },
+
+  created() {
+    if (this.post.post.tags.length > 0) {
+      this.firstTag =  this.post.post.tags[0].name
+    } else {
+      this.firstTag =  "none"
+    }
+  },
+
+  data(){
+    return{
+      isLoaded: true,
+      price: ["$", "$", "$$", "$$$"],
+      firstTag: null 
+    }
   },
 };
 </script>
@@ -69,6 +88,9 @@ export default {
         line-height: 26px;
         color: #707070;
         white-space: nowrap;
+        width: 45vw;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
     }
 

@@ -5,9 +5,9 @@
     <ne-pop-post-container></ne-pop-post-container>
     <h2>發現更多</h2>
     <ne-post
-      :key="i"
-      v-for="(post, i) in posts"
-      :post="post"
+    :key="i"
+    v-for="(post, i) in posts"
+    :post="post"
     ></ne-post>
   </div>
 </template>
@@ -49,7 +49,7 @@ export default {
     getAllPost() {
       const _this = this;
       _this.axios
-        .get(_this.api + "post/list/?page=0&eachPageNum=4&", {
+        .get(_this.api + "post/list/?page=0&eachPageNum=8&", {
           withCredentials: true,
         })
         .then((res) => {
