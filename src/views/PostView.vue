@@ -4,7 +4,7 @@
     <div class="container">
       <h1>{{ post.location.name }}</h1>
 
-      <div class="icon" v-if="post.author.userId === currentUser">
+      <div class="icon" v-if="post.author.userId === currentUserId">
         <button><span class="material-symbols-outlined">edit</span></button>
         <button @click="ensureRemove()">
           <span class="material-symbols-outlined">delete</span>
@@ -17,13 +17,10 @@
           'http://140.112.239.6/ntu-eat/data-img/post/' + post.post.images[0]
         "
       />
-      <p>{{ post.post.content }}</p>
-      <div class="tags">
-        <button>
-          <router-link to="#">台灣菜</router-link>
-        </button>
-        <button>
-          <router-link to="#">平價</router-link>
+      <VueShowdown class="content">{{ post.post.content }}</VueShowdown>
+      <div class="tags" v-if="post.post.tags.length > 0">
+        <button :key="i" v-for="(tag, i) in post.post.tags">
+          <router-link to="#">{{tag.name}}</router-link>
         </button>
       </div>
     </div>
@@ -98,10 +95,17 @@
     width: 100%;
     display: inline-block;
   }
-  p {
+  .content {
+    margin-top: 14px;
     color: #707070;
     font-size: 14px;
     margin-bottom: 20px;
+    :deep h1, h2, h3{
+      margin-top: 0px;
+    }
+    :deep ul{
+      padding-left: 20px;
+    }
   }
   .tags {
     margin-bottom: 24px;
@@ -179,10 +183,9 @@ export default {
 
   data() {
     return {
-      postId: null,
       post: null,
       isDone: false,
-      currentUser: null
+      currentUserId: null
     };
   },
 
@@ -190,7 +193,7 @@ export default {
     removePost() {
       const _this = this;
       const postformdata = new FormData();
-      postformdata.append("postId", this.postId);
+      postformdata.append("postId", this.post.postId);
 
       _this.axios
         .post(_this.api + "post/remove/", postformdata, {
@@ -227,9 +230,8 @@ export default {
 
     createPostView(params) {
       const _this = this;
-      this.postId = params.postId ?? 0;
       _this.axios
-        .get(_this.api + "post/list/by-id/?p=" + _this.postId, {
+        .get(_this.api + "post/list/by-id/?p=" + params.postId, {
           withCredentials: true,
         })
         .then((res) => {
@@ -254,7 +256,7 @@ export default {
         .get(_this.api + "user/info/", { withCredentials: true })
         .then((res) => {
           if (res.data.state === "success") {
-            this.currentUser = res.data.data.user.id;
+            this.currentUserId = res.data.data.user.id;
           } else {
             const errorMsg = res.data.error;
           }
