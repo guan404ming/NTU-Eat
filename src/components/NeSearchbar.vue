@@ -1,6 +1,6 @@
 <template>
   <div class="searchbar">
-    <input type="text" placeholder="想吃啥？按下搜尋幫您推薦！" v-model="query.keyword" />
+    <input type="text" placeholder="想吃啥？按下搜尋幫您推薦！" v-model="query.locName" />
     <button @click="getUrl()">
       <span class="material-symbols-outlined">search</span>
     </button>
@@ -34,11 +34,11 @@
         @click="selectOption('type')"
         :class="{
           active: choosedOption == 'type',
-          selected: query.type != null,
+          selected: query.tagName != null,
         }"
       >
-        <span v-if="query.type == null">類別</span>
-        <span v-else id="type">{{ query.type }}</span>
+        <span v-if="query.tagName == null">類別</span>
+        <span v-else id="type">{{ query.tagName }}</span>
       </button>
 
       <button
@@ -83,14 +83,14 @@ export default {
   data() {
     return {
       query: {
-        keyword: null,
+        locName: null,
         price: null,
         distance: 0,
-        type: null,
+        tagName: null,
         opening: false,
       },
       choosedOption: null,
-      parameters: "location=25.017951,121.539625",
+      parameters: "",
       tags: null,
       isDone: false,
     };
@@ -128,30 +128,37 @@ export default {
     },
 
     selectType(type) {
-      this.query.type = type;
+      this.query.tagName = type;
       this.choosedOption = null;
     },
 
     getUrl() {
       const _this = this;
 
-      if (this.query.keyword) {
-        this.parameters += "&keyword=" + this.query.keyword;
+      if (this.query.locName) {
+        this.parameters += "&locName=" + this.query.locName;
       }
 
       if (this.query.price !== null) {
-        this.parameters += "&maxprice=" + this.query.price.length;
+        this.parameters += "&priceLevels=" + this.query.price.length + (this.query.price.length + 1);
       }
 
       if (this.query.distance) {
-        this.parameters += "&radius=" + this.query.distance;
-      } else {
-        this.parameters += "&radius=" + 20000;
+        this.parameters += "&distance=" + this.query.distance;
+      } 
+
+      if (this.query.tagName) {
+        this.parameters += "&tagNames=" + this.query.tagName;
       }
 
       if (this.query.opening) {
-        this.parameters += "&opennow=" + this.query.opening;
+        this.parameters += "&opening=" + this.query.opening;
       }
+
+      if (this.parameters == ""){
+        this.parameters += "&"
+      }
+
       this.isDone = true;
     },
 
@@ -178,7 +185,7 @@ export default {
   watch: {
     isDone: function(){
       this.$router.push({
-          path: `/searchresult/${this.parameters}/${this.query.type}`
+          path: `/searchresult/${this.parameters}`
       })
     }
   }

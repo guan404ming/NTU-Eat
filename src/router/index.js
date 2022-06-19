@@ -93,7 +93,7 @@ const routes = [
     component: UpdateProfileView
   },
   {
-    path: '/searchresult/:parameters/:tag',
+    path: '/searchresult/:parameters',
     name: 'searchresult',
     component: SearchResultView
   },

@@ -17,7 +17,7 @@
           :create-tag="true"
           :searchable="true"
           :max-width="145"
-          placeholder="拜託標一下🥺"
+          placeholder="拜託標一下🥺 "
           v-model="tags"
         ></multiselect>
       </div>
@@ -66,7 +66,7 @@
         </Swiper>
 
         <div :class="{ uploaded: isUploaded }" class="controlbar">
-          <button>
+          <button style="visibility: hidden;">
             <span class="material-symbols-outlined">add_photo_alternate</span>
           </button>
           <button>
@@ -196,6 +196,7 @@
       }
     }
     .preview {
+       z-index: 0;
       display: none;
       margin: 0 auto 16px auto;
       justify-content: stretch;
@@ -216,13 +217,17 @@
         height: 32vh;
         width: 76vw;
       }
-      :deep .swiper-pagination-bullet{
-        background-color: #c9c9c9;
+      :deep .swiper-pagination-bullets{ 
+        .swiper-pagination-bullet{
+          background-color: #c9c9c9;
+        }
       }
     }
     .controlbar {
+      z-index: 200;
       display: none;
       margin-left: calc(76% - 64px);
+      text-align: right;
       transform: translateY(-64px);
       &.uploaded {
         display: inline-block;
@@ -237,7 +242,7 @@
         height: 32px;
         width: 32px;
         &:hover {
-          opacity: 0.7;
+          opacity: 0.8;
           cursor: pointer;
         }
         span {
@@ -342,9 +347,9 @@ export default {
       postId: null,
       tags: [],
       tagsOptions: [
-        { value: "咖啡廳", label: "咖啡廳" },
-        { value: "速食", label: "速食" },
-        { value: "義大利麵", label: "義大利麵" },
+        { value: "公館商圈", label: "公館商圈" },
+        { value: "一一八巷", label: "一一八巷" },
+        { value: "溫州街", label: "溫州街" },
       ],
     };
   },

@@ -8,11 +8,11 @@
         v-for="(post, i) in posts"
         :post="post"
       ></ne-pop-post>
-      <ne-pop-post
+      <!-- <ne-pop-post
         v-if="posts.length % 2 !== 0 && posts.length !== 0"
         style="visibility: hidden"
         :post="posts[0]"
-      ></ne-pop-post>
+      ></ne-pop-post> -->
     </div>
   </div>
 </template>
@@ -47,62 +47,33 @@ export default {
   },
 
   created() {
-    this.getGoogleApi();
+    this.getPosts();
   },
 
   methods: {
-    getPostByPlaceId(placeId) {
-      const _this = this;
-      _this.axios
-        .get(_this.api + `post/list/by-place/?p=${placeId}`, {
-          withCredentials: true,
-        })
-        .then((res) => {
-          this.checklimitation(res)
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-
-    checklimitation(res) {
-      if (res.data.state === "success" && res.data.data.posts.length > 0) {
-        res.data.data.posts.forEach((element) => {
-          var hasTag = false
-          element.post.tags.forEach((el) => {
-          if (el.name === this.$route.params.tag){
-            hasTag = true;
-          }
-          })
-          if (this.$route.params.tag==='null' || hasTag){
-            this.posts.push(element);
-          }
-        });
-      }
-    },
-
-    getGoogleApi() {
-      const apiKey = "key=AIzaSyBv1bZpr-pLSgw6cnTkpexgcFgY40F3j0w";
-      var url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?${apiKey}&${this.$route.params.parameters}`;
+    getPosts() {
+      var url =  this.api + 'post/list/match/?' + `${this.$route.params.parameters}`;
       // console.log(url)
-      this.axios
+      if (this.$route.params.parameters === "&") {
+        this.getAllPost()
+      } else {
+        this.axios
         .get(url)
         .then((res) => {
-          if (res.data.results) {
-            res.data.results.forEach((element) => {
-              this.getPostByPlaceId(element.place_id);
-            });
+          if (res.data) {
+            this.posts = res.data.data.posts
+            if (this.posts.length == 0){
+              this.getAllPost()
+              console.log(this.posts)
+            }
           } else {
             console.log(res);
           }
-          if (this.posts.length == 0) {
-            console.log(this.posts)
-            this.getAllPost()
-          }
         })
         .catch(function (error) {
           console.log(error);
         });
+      }
     },
 
     getAllPost() {
@@ -129,8 +100,8 @@ export default {
 
 <style lang="scss" scoped>
 div {
-  text-align: center;
   h1 {
+    text-align: center;
     padding: 12px;
     margin: 24px;
     border-bottom: solid;
@@ -138,8 +109,10 @@ div {
     border-bottom-width: 1px;
   }
   .posts {
-    margin-right: 12px;
+    margin-right: 6px;
+    margin-left: 6px;
     a {
+      text-align: center;
       vertical-align: middle;
       margin-bottom: 12px;
       :deep .authorname,
