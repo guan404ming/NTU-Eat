@@ -24,7 +24,8 @@
       </router-link>
       
       <router-link to="/profile">
-        <img :src="avatar">
+        <img :src="avatar" v-if="userRole > 3">
+        <span class="material-symbols-outlined avatar" v-else>account_circle</span>
       </router-link>
 
     </div>
@@ -70,6 +71,9 @@ header{
         vertical-align: middle;
         font-variation-settings:
         'wght' 300,
+      }
+      .avatar{
+        font-size: 36px;
       }
     }
     a{

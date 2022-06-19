@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <ne-go-button @click="redirection"></ne-go-button>
+    <ne-go-button @click="redirection()"></ne-go-button>
   </div>
   
 
