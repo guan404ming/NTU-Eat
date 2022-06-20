@@ -32,7 +32,9 @@
           this.data + 'user/' +
           post.author.avatar[0].filename
         "
+        v-if="post.author.avatar[0].filename !== null"
       />
+      <span class="material-symbols-outlined avatar" v-else>account_circle</span>
       <router-link :to="'/authorpostlist/' + post.author.userId">
         <p class="">作者簡介</p>
         <p class="name">{{ post.author.username }}</p>
@@ -157,6 +159,14 @@
     width: 54px;
     flex-shrink: 0;
     margin-top: 12px;
+  }
+  span {
+    font-size: 54px;
+    color: #707070;
+    margin-top: 12px;
+    vertical-align: middle;
+    font-variation-settings:
+        'wght' 300,
   }
 }
 </style>

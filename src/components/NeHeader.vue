@@ -22,9 +22,8 @@
       <router-link to="#">
         <span class="material-symbols-outlined">bookmark</span>
       </router-link>
-      
       <router-link to="/profile">
-        <img :src="avatar" v-if="userRole > 3">
+        <img :src="avatar" v-if="userRole > 3 && (avatar !== null)">
         <span class="material-symbols-outlined avatar" v-else>account_circle</span>
       </router-link>
 
@@ -153,7 +152,11 @@ export default {
       this.axios.get(_this.api + "user/info/", {withCredentials: true})
       .then((res) => {
         if (res.data.data){
-          this.avatar = this.data + 'user/' + res.data.data.superUser.avatar[0].filename
+          if (res.data.data.superUser.avatar[0].filename == null) {
+            this.avatar = null
+          } else{
+            this.avatar = this.data + 'user/' + res.data.data.superUser.avatar[0].filename
+          }
         } else{
           const errorMsg = res.data.data
           console.log(errorMsg)

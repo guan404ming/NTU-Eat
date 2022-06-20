@@ -3,7 +3,7 @@
   <div class="container">
     <h1>{{ username }}</h1>
 
-    <img :src="avatar" />
+    <img :src="avatar" v-if="userRole > 3 && avatar !== null" />
 
     <router-link to="/updateprofile" v-if="userRole > 3">
       <span class="material-symbols-outlined">edit</span>
@@ -120,7 +120,7 @@ export default {
     return {
       username: "",
       userRole: null,
-      avatar: null,
+      avatar: 'none',
       userId: null
     };
   },
@@ -134,9 +134,13 @@ export default {
           if (res.data.state === "success") {
             this.username = res.data.data.user.username;
             this.userRole = res.data.data.user.userRole.num;
-            this.avatar =
+            if (res.data.data.superUser.avatar[0].filename == null) {
+              this.avatar = null
+            } else {
+              this.avatar =
               this.data + "user/" +
               res.data.data.superUser.avatar[0].filename;
+            }
             this.userId = res.data.data.user.id
           } else {
             const errorMsg = res.data.error;

@@ -3,7 +3,7 @@
     <router-link class="post" :to="'/post/'+ post.postId">
     <div class="post-info">
       <div class="author">
-        <img :src="data + 'user/' + post.author.avatar[0].filename" />
+        <img :src="data + 'user/' + post.author.avatar[0].filename" v-if="post.author.avatar[0].filename!==null"/>
         <p>{{post.author.username }}</p>
       </div>
 
