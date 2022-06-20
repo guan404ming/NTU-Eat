@@ -151,7 +151,7 @@ export default {
       this.axios.get(_this.api + "user/info/", {withCredentials: true})
       .then((res) => {
         if (res.data.data){
-          this.avatar = 'http://ntu-eat.com/data-img/user/' + res.data.data.superUser.avatar[0].filename
+          this.avatar = 'https://ntu-eat.com/data-img/user/' + res.data.data.superUser.avatar[0].filename
         } else{
           const errorMsg = res.data.data
           console.log(errorMsg)

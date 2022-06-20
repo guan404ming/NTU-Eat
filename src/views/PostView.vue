@@ -15,7 +15,7 @@
       
       <Swiper :modules="modules"
         :pagination="{ clickable: true }">
-	      <swiper-slide v-for="(image, i) in post.post.images" :key="i"><img :src="'http://ntu-eat.com/data-img/post/' + image"/></swiper-slide>
+	      <swiper-slide v-for="(image, i) in post.post.images" :key="i"><img :src="'https://ntu-eat.com/data-img/post/' + image"/></swiper-slide>
       </Swiper>
 
       <VueShowdown class="content">{{ post.post.content }}</VueShowdown>
@@ -29,7 +29,7 @@
     <div class="author">
       <img
         :src="
-          'http://ntu-eat.com/data-img/user/' +
+          'https://ntu-eat.com/data-img/user/' +
           post.author.avatar[0].filename
         "
       />

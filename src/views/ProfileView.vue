@@ -133,7 +133,7 @@ export default {
             this.username = res.data.data.user.username;
             this.userRole = res.data.data.user.userRole.num;
             this.avatar =
-              "http://ntu-eat.com/data-img/user/" +
+              "https://ntu-eat.com/data-img/user/" +
               res.data.data.superUser.avatar[0].filename;
             this.userId = res.data.data.user.id
           } else {

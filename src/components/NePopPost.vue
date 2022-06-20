@@ -1,6 +1,6 @@
 <template>
   <router-link class="post" :to="'/post/'+ post.postId">
-    <img :src="'http://ntu-eat.com/data-img/post/' + post.post.images[0]" />
+    <img :src="'https://ntu-eat.com/data-img/post/' + post.post.images[0]" />
     <p class="authorname">{{ post.author.username }}</p>
     <p class="locname">{{ post.location.name }}</p>
   </router-link>

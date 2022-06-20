@@ -1,7 +1,7 @@
 import { ref }  from 'vue'
 
 export function getApi(){
-    const api = ref('http://ntu-eat.com/ntu-eat/api/')
+    const api = ref('https://ntu-eat.com/api/')
     return api
 }
 
