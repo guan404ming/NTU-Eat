@@ -106,7 +106,7 @@
 <script>
 import NeHeader from "@/components/NeHeader.vue";
 import NeGoButton from "@/components/NeGoButton.vue";
-import { getApi, popup } from "@/GlobalSettings.js";
+import { getApi, popup, getData } from "@/GlobalSettings.js";
 
 export default {
   name: "UpdateProfile",
@@ -117,9 +117,11 @@ export default {
 
   setup() {
     const api = getApi();
+    const data = getData();
     return {
       api,
       popup,
+      data
     };
   },
 
@@ -151,7 +153,7 @@ export default {
             this.username = res.data.data.user.username;
             this.user.targetUserId = res.data.data.user.id;
             this.avatar =
-              "https://ntu-eat.com/data-img/user/" +
+              this.data + "user/" +
               res.data.data.superUser.avatar[0].filename;
             this.user.description = res.data.data.superUser.description;
             this.user.displayName = res.data.data.superUser.displayName;

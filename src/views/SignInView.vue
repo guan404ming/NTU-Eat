@@ -92,6 +92,8 @@ export default {
       //check general error
       if (errorMsg.general === 'notActivated'){
         this.popup('帳號尚未驗證', '現在驗證', 'warning')
+        var checkbutton = this.$swal.getConfirmButton()
+        checkbutton.addEventListener('click', () => { this.$router.push('/activation') })
       }
       if (errorMsg.general === 'loggedIn'){
         this.popup('此用戶已登入', '確認', 'warning')

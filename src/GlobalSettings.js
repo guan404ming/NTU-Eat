@@ -2,7 +2,14 @@ import { ref }  from 'vue'
 
 export function getApi(){
     const api = ref('https://ntu-eat.com/api/')
+    // const api = ref('http://140.112.239.6/ntu-eat/api/')
     return api
+}
+
+export function getData(){
+    const data = ref('https://ntu-eat.com/data-img/')
+    // const data = ref('http://140.112.239.6/ntu-eat/data-img/')
+    return data
 }
 
 export function popup(msg, buttonMsg, icon){

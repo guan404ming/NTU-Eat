@@ -3,7 +3,7 @@
     <router-link class="post" :to="'/post/'+ post.postId">
     <div class="post-info">
       <div class="author">
-        <img :src="'https://ntu-eat.com/data-img/user/' + post.author.avatar[0].filename" />
+        <img :src="data + 'user/' + post.author.avatar[0].filename" />
         <p>{{post.author.username }}</p>
       </div>
 
@@ -18,13 +18,14 @@
         </p>
       </div>
     </div>
-    <img :src="'https://ntu-eat.com/data-img/post/' + post.post.images[0]" />
+    <img :src="data + 'post/' + post.post.images[0]" />
     </router-link>
   </div>
   
 </template>
 
 <script>
+import { getData } from "@/GlobalSettings";
 export default {
   name: "NePost",
   props: {
@@ -37,6 +38,13 @@ export default {
     } else {
       this.firstTag =  "none"
     }
+  },
+
+  setup() {
+    const data = getData();
+    return {
+      data,
+    };
   },
 
   data(){

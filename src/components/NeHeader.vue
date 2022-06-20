@@ -101,7 +101,7 @@ header{
 
 
 <script>
-import { getApi } from '@/GlobalSettings.js'
+import { getApi, getData } from '@/GlobalSettings.js'
 
 export default {
   name: 'NeHeader',
@@ -116,8 +116,10 @@ export default {
 
   setup() {
     const api = getApi();
+    const data = getData();
     return{
-      api
+      api,
+      data
     }
   },
 
@@ -151,7 +153,7 @@ export default {
       this.axios.get(_this.api + "user/info/", {withCredentials: true})
       .then((res) => {
         if (res.data.data){
-          this.avatar = 'https://ntu-eat.com/data-img/user/' + res.data.data.superUser.avatar[0].filename
+          this.avatar = this.data + 'user/' + res.data.data.superUser.avatar[0].filename
         } else{
           const errorMsg = res.data.data
           console.log(errorMsg)

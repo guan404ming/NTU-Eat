@@ -15,7 +15,7 @@
       
       <Swiper :modules="modules"
         :pagination="{ clickable: true }">
-	      <swiper-slide v-for="(image, i) in post.post.images" :key="i"><img :src="'https://ntu-eat.com/data-img/post/' + image"/></swiper-slide>
+	      <swiper-slide v-for="(image, i) in post.post.images" :key="i"><img :src="data + 'post/' + image"/></swiper-slide>
       </Swiper>
 
       <VueShowdown class="content">{{ post.post.content }}</VueShowdown>
@@ -29,7 +29,7 @@
     <div class="author">
       <img
         :src="
-          'https://ntu-eat.com/data-img/user/' +
+          this.data + 'user/' +
           post.author.avatar[0].filename
         "
       />
@@ -164,7 +164,7 @@
 
 <script>
 import NeHeader from "@/components/NeHeader.vue";
-import { getApi, popup } from "@/GlobalSettings";
+import { getApi, popup, getData } from "@/GlobalSettings";
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import { Navigation, Pagination } from 'swiper'
@@ -186,9 +186,11 @@ export default {
 
   setup() {
     const api = getApi();
+    const data = getData();
     return {
       api,
       popup,
+      data,
       modules: [Navigation, Pagination]
     };
   },

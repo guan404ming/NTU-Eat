@@ -92,7 +92,7 @@
 import NeHeader from "@/components/NeHeader.vue";
 import NeInputbar from "@/components/NeInputbar.vue";
 import NeGoButton from "@/components/NeGoButton.vue";
-import { getApi, popup } from "@/GlobalSettings.js";
+import { getApi, getData, popup } from "@/GlobalSettings.js";
 
 export default {
   name: "ProfileView",
@@ -104,8 +104,10 @@ export default {
 
   setup() {
     const api = getApi();
+    const data = getData();
     return {
       api,
+      data,
       popup,
     };
   },
@@ -133,7 +135,7 @@ export default {
             this.username = res.data.data.user.username;
             this.userRole = res.data.data.user.userRole.num;
             this.avatar =
-              "https://ntu-eat.com/data-img/user/" +
+              this.data + "user/" +
               res.data.data.superUser.avatar[0].filename;
             this.userId = res.data.data.user.id
           } else {
