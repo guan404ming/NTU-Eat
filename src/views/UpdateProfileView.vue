@@ -151,7 +151,7 @@ export default {
             this.username = res.data.data.user.username;
             this.user.targetUserId = res.data.data.user.id;
             this.avatar =
-              "http://140.112.239.6/ntu-eat/data-img/user/" +
+              "http://ntu-eat.com/data-img/user/" +
               res.data.data.superUser.avatar[0].filename;
             this.user.description = res.data.data.superUser.description;
             this.user.displayName = res.data.data.superUser.displayName;

@@ -3,7 +3,7 @@
     <router-link class="post" :to="'/post/'+ post.postId">
     <div class="post-info">
       <div class="author">
-        <img :src="'http://140.112.239.6/ntu-eat/data-img/user/' + post.author.avatar[0].filename" />
+        <img :src="'http://ntu-eat.com/data-img/user/' + post.author.avatar[0].filename" />
         <p>{{post.author.username }}</p>
       </div>
 
@@ -18,7 +18,7 @@
         </p>
       </div>
     </div>
-    <img :src="'http://140.112.239.6/ntu-eat/data-img/post/' + post.post.images[0]" />
+    <img :src="'http://ntu-eat.com/data-img/post/' + post.post.images[0]" />
     </router-link>
   </div>
   
