@@ -29,13 +29,13 @@
   .popup{
     border: 2px solid #707070 !important;
     border-radius: 20px !important;
-    box-shadow: 0px 8px 10px #00000029;
+    box-shadow: 0px 8px 10px #00000029!important;
     width: 60vw !important;
     max-width: 500px !important;
   }
   .popup-icon{
-    font-weight: 900;
-    border: solid !important;
+    font-weight: 900 !important;
+    border: 4px solid #EBDECE !important;
     color: #EBDECE !important;
   }
 
