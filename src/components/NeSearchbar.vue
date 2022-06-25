@@ -31,14 +31,14 @@
       </button>
 
       <button
-        @click="selectOption('type')"
+        @click="selectOption('tagName')"
         :class="{
-          active: choosedOption == 'type',
+          active: choosedOption == 'tagName',
           selected: query.tagName != null,
         }"
       >
         <span v-if="query.tagName == null">類別</span>
-        <span v-else id="type">{{ query.tagName }}</span>
+        <span v-else id="tagName">{{ query.tagName }}</span>
       </button>
 
       <button
@@ -67,7 +67,7 @@
         <span>{{ query.distance }}m</span>
       </div>
 
-      <div class="type" v-if="choosedOption == 'type'">
+      <div class="tagName" v-if="choosedOption == 'tagName'">
         <button :key="i" v-for="(tag, i) in tags" @click="selectType(tag.name)">{{tag.name}}</button>
       </div>
     </div>
@@ -127,8 +127,8 @@ export default {
       this.choosedOption = null;
     },
 
-    selectType(type) {
-      this.query.tagName = type;
+    selectType(tagName) {
+      this.query.tagName = tagName;
       this.choosedOption = null;
     },
 
@@ -251,7 +251,7 @@ export default {
       border-radius: 20px;
       position: relative;
       white-space: nowrap;
-      #type {
+      #tagName {
         display: inline-block;
         max-width: calc((100vw - 66px) / 4 - 20px);
         overflow: scroll;
@@ -341,7 +341,7 @@ export default {
       }
     }
 
-    .type {
+    .tagName {
       margin-top: 12px;
       padding: 3px 6px;
       border-radius: 20px;

@@ -26,5 +26,9 @@
     font-size: 18px; 
     font-weight: 600;
     cursor: pointer;
+    &:active{
+      box-shadow: none;
+      filter: brightness(0.8);
+    }
   }
 </style>
