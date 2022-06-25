@@ -223,6 +223,7 @@ export default {
     handleUpdateProfile() {
       const _this = this;
       const profileformdata = new FormData();
+      let loader = this.$loading.show()
       if (!_this.user.noAvatar) {
         profileformdata.append("avatar", _this.user.avatar);
       } else {
@@ -237,6 +238,7 @@ export default {
         })
         .then((res) => {
           if (res.data.state === "success") {
+            loader.hide()
             _this.popup("個人檔案已成功編輯", "返回", "success");
             this.setRedirection();
           } else {

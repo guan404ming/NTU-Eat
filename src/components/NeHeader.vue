@@ -1,6 +1,5 @@
 <template>
   <header>
-    
     <router-link to="/">
       <h1>NTU EAT</h1>
     </router-link>
@@ -95,21 +94,22 @@ header{
   .notLoggedin.display{
     display: none;
   }
+  .vld-overlay{
+    backdrop-filter: blur(2px);
+  }
 }
 </style>
 
 
 <script>
 import { getApi, getData } from '@/GlobalSettings.js'
-
 export default {
   name: 'NeHeader',
-  
   data() {
     return {
       status: false,
       userRole: null,
-      avatar: null
+      avatar: null,
     }
   },
 
@@ -132,11 +132,13 @@ export default {
       this.axios.get(_this.api + "user/status/", {withCredentials: true})
       .then((res) => {
         if (res.data.data.status){
+          let loader = this.$loading.show()
           _this.status = res.data.data.status.isLoggedIn
           _this.userRole = res.data.data.status.userRole.num
           if (this.userRole >= 5) {
             this.getAvatar()
           }
+          loader.hide()
         } else{
           const errorMsg = res.data.data.status
           console.log(errorMsg)
@@ -152,10 +154,10 @@ export default {
       this.axios.get(_this.api + "user/info/", {withCredentials: true})
       .then((res) => {
         if (res.data.data){
-          if (res.data.data.superUser.avatar[0].filename == null) {
+          if (res.data.data.superUser.avatar[4].filename == null) {
             this.avatar = null
           } else{
-            this.avatar = this.data + 'user/' + res.data.data.superUser.avatar[0].filename
+            this.avatar = this.data + 'user/' + res.data.data.superUser.avatar[4].filename
           }
         } else{
           const errorMsg = res.data.data
@@ -165,7 +167,7 @@ export default {
       .catch(function(error) {
         console.log(error)
       })
-    }
+    },
   }
 }
 </script>

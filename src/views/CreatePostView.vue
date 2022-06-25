@@ -368,6 +368,7 @@ export default {
     },
 
     handleCreatePost() {
+      let loader = this.$loading.show()
       const _this = this;
       const tagsString = this.getTagsString();
       const postformdata = new FormData();
@@ -386,11 +387,13 @@ export default {
         .then((res) => {
           if (res.data.state === "success") {
             this.findNewestPost();
+            loader.hide()
             _this.popup("文章已成功發布", "現在查看", "success");
             this.setRedirection();
           } else {
             const errorMsg = res.data.error;
             console.log(errorMsg);
+            loader.hide()
             _this.checkError(errorMsg);
           }
         })
