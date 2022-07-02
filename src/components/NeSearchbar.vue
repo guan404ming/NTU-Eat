@@ -255,9 +255,8 @@ export default {
         display: inline-block;
         max-width: calc((100vw - 66px) / 4 - 20px);
         overflow: scroll;
-        margin: 0px;
-        margin-top: 2px;
-        margin-bottom: -1px;
+        margin: 1px 0px 3px 0px;
+        font-size: 14.5px;
       }
       &.active {
         background-color: #efefef;

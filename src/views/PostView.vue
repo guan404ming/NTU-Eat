@@ -253,6 +253,7 @@ export default {
     },
 
     createPostView(params) {
+      let loader = this.$loading.show()
       const _this = this;
       _this.axios
         .get(_this.api + "post/list/by-id/?p=" + params.postId, {
@@ -262,9 +263,11 @@ export default {
           if (res.data.state === "success") {
             this.post = res.data.data.post;
             this.isDone = true
+            loader.hide()
           } else {
             const errorMsg = res.data.error;
             console.log(errorMsg)
+            loader.hide()
             this.popup('無此貼文', '返回首頁', 'question')
             this.setRedirection()
           }

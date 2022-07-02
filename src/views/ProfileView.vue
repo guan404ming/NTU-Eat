@@ -127,6 +127,7 @@ export default {
 
   methods: {
     getUserInfo() {
+      let loader = this.$loading.show()
       const _this = this;
       _this.axios
         .get(_this.api + "user/info/", { withCredentials: true })
@@ -142,6 +143,7 @@ export default {
               res.data.data.superUser.avatar[0].filename;
             }
             this.userId = res.data.data.user.id
+            loader.hide()
           } else {
             const errorMsg = res.data.error;
             console.log(errorMsg);

@@ -155,6 +155,7 @@
       },
 
       handleSignup() {
+        let loader = this.$loading.show()
         const _this = this
         const signupformdata = new FormData()
         signupformdata.append('email', _this.email)
@@ -165,9 +166,11 @@
         _this.axios.post(_this.api + "user/register/", signupformdata, {withCredentials: true})
         .then((res) => {
           if (res.data.state === 'success'){
+            loader.hide()
             _this.popup("註冊成功", "驗證您的帳號", "success")
             _this.setRedirection()
           }else{
+            loader.hide()
             const errorMsg = res.data.error
             _this.checkError(errorMsg)
           }
