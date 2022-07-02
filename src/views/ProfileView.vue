@@ -167,7 +167,7 @@ export default {
         .get(_this.api + "user/logout/", { withCredentials: true })
         .then((res) => {
           if (res.data.state === "success") {
-            console.log(res.data);
+            localStorage.clear();
             _this.popup("成功登出", "返回首頁", "success");
             _this.setRedirection();
           } else {

@@ -153,6 +153,7 @@ export default {
 
   methods: {
     getUserInfo() {
+      let loader = this.$loading.show()
       const _this = this;
       _this.axios
         .get(_this.api + "user/info/", { withCredentials: true })
@@ -173,6 +174,7 @@ export default {
             const errorMsg = res.data.error;
             console.log(errorMsg);
           }
+          loader.hide()
         })
         .catch(function (error) {
           console.log(error);

@@ -129,44 +129,53 @@ export default {
   methods: {
     getUserStatus() {
       const _this = this
-      this.axios.get(_this.api + "user/status/", {withCredentials: true})
-      .then((res) => {
-        if (res.data.data.status){
-          let loader = this.$loading.show()
-          _this.status = res.data.data.status.isLoggedIn
-          _this.userRole = res.data.data.status.userRole.num
-          if (this.userRole >= 5) {
-            this.getAvatar()
+      if (localStorage.getItem('loginState')) {
+        this.status = localStorage.getItem('loginState')
+        this.userRole = localStorage.getItem('userRole')
+        this.getAvatar()
+      } else {
+        this.axios.get(_this.api + "user/status/", {withCredentials: true})
+        .then((res) => {
+          if (res.data.data.status){
+            _this.status = res.data.data.status.isLoggedIn
+            _this.userRole = res.data.data.status.userRole.num
+            if (this.userRole >= 5) {
+              this.getAvatar()
+            }
+          } else{
+            const errorMsg = res.data.data.status
+            console.log(errorMsg)
           }
-          loader.hide()
-        } else{
-          const errorMsg = res.data.data.status
-          console.log(errorMsg)
-        }
-      })
-      .catch(function(error) {
-        console.log(error)
-      })
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+      }
     },
 
     getAvatar() {
       const _this = this
-      this.axios.get(_this.api + "user/info/", {withCredentials: true})
-      .then((res) => {
-        if (res.data.data){
-          if (res.data.data.superUser.avatar[4].filename == null) {
-            this.avatar = null
+      if (localStorage.getItem('avatar')) {
+        this.avatar = localStorage.getItem('avatar')
+      } else {
+        this.axios.get(_this.api + "user/info/", {withCredentials: true})
+        .then((res) => {
+          if (res.data.data){
+            if (res.data.data.superUser.avatar[4].filename == null) {
+              this.avatar = null
+            } else{
+              this.avatar = this.data + 'user/' + res.data.data.superUser.avatar[4].filename
+              localStorage.setItem('avatar', this.data + 'user/' + res.data.data.superUser.avatar[4].filename)
+            }
           } else{
-            this.avatar = this.data + 'user/' + res.data.data.superUser.avatar[4].filename
+            const errorMsg = res.data.data
+            console.log(errorMsg)
           }
-        } else{
-          const errorMsg = res.data.data
-          console.log(errorMsg)
-        }
-      })
-      .catch(function(error) {
-        console.log(error)
-      })
+        })
+        .catch(function(error) {
+          console.log(error)
+        }) 
+      }
     },
   }
 }

@@ -40,7 +40,7 @@
 import NeHeader from '@/components/NeHeader.vue'
 import NeInputbar from '@/components/NeInputbar.vue'
 import NeGoButton from '@/components/NeGoButton.vue'
-import { getApi, popup } from '@/GlobalSettings.js'
+import { getApi, getData, popup } from '@/GlobalSettings.js'
 
 export default {
   name: 'SignInView',
@@ -50,10 +50,13 @@ export default {
     NeGoButton
   },
 
-  setup() { 
-    const api = getApi()
+  setup() {
+    const api = getApi();
+    const data = getData();
     return{
-      api, popup
+      api,
+      data,
+      popup
     }
   },
 
@@ -111,7 +114,9 @@ export default {
       _this.axios.post(_this.api + 'user/login/', signinformdata, {withCredentials: true})
       .then((res) => {
         if (res.data.state === 'success'){
+          this.getInfo()
           loader.hide()
+          localStorage.setItem('loginState', true)
           _this.popup('成功登入', '進入首頁', 'success')
           _this.setRedirection()
         } else{
@@ -123,7 +128,23 @@ export default {
       .catch(function(error) {
           console.log(error)
       })
-    }
+    },
+
+    getInfo() {
+      const _this = this
+      this.axios.get(_this.api + "user/info/", {withCredentials: true})
+      .then((res) => {
+        if (res.data.data.user.userRole.num > 3){
+          if (res.data.data.superUser.avatar[4].filename != null) {
+            localStorage.setItem('avatar', this.data + 'user/' + res.data.data.superUser.avatar[4].filename)
+          }
+          localStorage.setItem('userRole', res.data.data.user.userRole.num)
+        } 
+      })
+      .catch(function(error) {
+        console.log(error)
+      })
+    },
   },
 }
 </script>
