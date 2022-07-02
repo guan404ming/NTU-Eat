@@ -241,6 +241,7 @@ export default {
         .then((res) => {
           if (res.data.state === "success") {
             loader.hide()
+            localStorage.clear();
             _this.popup("個人檔案已成功編輯", "返回", "success");
             this.setRedirection();
           } else {
