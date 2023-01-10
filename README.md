@@ -32,3 +32,10 @@
 
 - Vue, Axios, FortAwesome, SweetAlert, Google Map Api
 - Post display: Vue-Showdown, Swiper
+
+### 🍽️ **How to Install and Test on Localhost**
+
+
+- Install required packages: `yarn install`
+- Start the frontend: `yarn run serve`
+- Only provide the frontend local test because of the privacy concern
