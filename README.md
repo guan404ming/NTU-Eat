@@ -19,13 +19,13 @@
     - Check your own post
 - **Posts:**
     - List all posts and filter posts by topic
-    - Sort articles by price / distance / food type / is open
+    - Sort posts by price / distance / food type / is open
     - Support add post by selecting retaurant on Google Map
-    - Support Markdown syntax for adding articles and preview before publishing
-    - Delete and upvote / downvote articles
+    - Support Markdown syntax for adding posts and preview before publishing
+    - Delete and upvote / downvote posts
 
-### 🍽️ Frameworks / Modules / Source Code / Third-Party Packages Used and Referenced
+### 🍽️ Frameworks / Packages Used
 
-- **Frontend:**
-    - Vue, Axios, FortAwesome, SweetAlert, Google Map
-    - Post display: Vue-Showdown, Swiper
+
+- Vue, Axios, FortAwesome, SweetAlert, Google Map Api
+- Post display: Vue-Showdown, Swiper
