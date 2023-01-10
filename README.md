@@ -1,7 +1,7 @@
 # NTU Eat - Mobile Food Blog for NTU Students 🍽️
 
 
-![UI](https://user-images.githubusercontent.com/105915352/211570217-d71ba206-681d-4995-8c70-aeeb3fa328fe.png)
+![Final](https://user-images.githubusercontent.com/105915352/211610079-f8465a89-2a44-4b2a-b89f-1a64f922d316.png)
 
 
 - We have created a mobile food blog for NTU students. On this website, users can:
@@ -10,7 +10,6 @@
 
     ****Share freely**** - Share your favorite meals with others on our website and let more people discover delicious food!!
 
-- **Demo video:** []()
 - **Deployed link:** [NTU Eat - Mobile Food Blog for NTU Students 🍽️](https://ntu-eat.com/)
 
 
