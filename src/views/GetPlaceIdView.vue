@@ -73,7 +73,7 @@ import NeHeader from '@/components/NeHeader.vue'
 import NeGoButton from '@/components/NeGoButton.vue'
 import { popup } from '@/GlobalSettings.js'
 var script = document.createElement('script')
-script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBv1bZpr-pLSgw6cnTkpexgcFgY40F3j0w&region=TW&language=zh-TW&libraries=places&v=weekly'
+script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_KEY}&region=TW&language=zh-TW&libraries=places&v=weekly`
 script.async = true;
 document.head.appendChild(script);
 
@@ -132,9 +132,9 @@ export default {
                 return "placeId" in e;
             }
             handleClick(event) {
-                console.log("You clicked on: " + event.latLng);
+                // console.log("You clicked on: " + event.latLng);
                 if (this.isIconMouseEvent(event)) {
-                    console.log("You clicked on place:" + event.placeId);
+                    // console.log("You clicked on place:" + event.placeId);
                     event.stop();
                     if (event.placeId) {
                         this.getPlaceInformation(event.placeId);

@@ -1,14 +1,14 @@
 import { ref } from 'vue'
 
 export function getApi(){
-    const api = ref('https://ntu-eat.com/api/')
-    // const api = ref('http://172.20.10.4/ntu-eat/api/')
+    // const api = ref('https://ntu-eat.com/api/')
+    const api = ref('http://localhost/ntu-eat/api/')
     return api
 }
 
 export function getData(){
-    const data = ref('https://ntu-eat.com/data-img/')
-    // const data = ref('http://172.20.10.4/ntu-eat/data-img/')
+    // const data = ref('https://ntu-eat.com/data-img/')
+    const data = ref('http://localhost/ntu-eat/data-img/')
     return data
 }
 
