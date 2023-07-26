@@ -8,11 +8,6 @@
         v-for="(post, i) in posts"
         :post="post"
       ></ne-pop-post>
-      <!-- <ne-pop-post
-        v-if="posts.length % 2 !== 0 && posts.length !== 0"
-        style="visibility: hidden"
-        :post="posts[0]"
-      ></ne-pop-post> -->
     </div>
   </div>
 </template>
@@ -52,10 +47,11 @@ export default {
 
   methods: {
     getPosts() {
+      let loader = this.$loading.show()
       var url =  this.api + 'post/list/match/?' + `${this.$route.params.parameters}`;
-      // console.log(url)
       if (this.$route.params.parameters === "&") {
         this.getAllPost()
+        loader.hide()
       } else {
         this.axios
         .get(url)
@@ -69,6 +65,7 @@ export default {
           } else {
             console.log(res);
           }
+          loader.hide()
         })
         .catch(function (error) {
           console.log(error);

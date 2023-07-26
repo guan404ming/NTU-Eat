@@ -1,42 +1,51 @@
 <template>
-	<div v-if="isLoaded">
-		<router-link class="post" :to="'/post/' + post.postId">
-			<div class="post-info">
-				<div class="author">
-					<img :src="'http://localhost/ntu-eat/data-img/user/' + post.author.avatar[0].filename" />
-					<p>{{ post.author.username }}</p>
-				</div>
+  <div v-if="isLoaded">
+    <router-link class="post" :to="'/post/'+ post.postId">
+    <div class="post-info">
+      <div class="author">
+        <img :src="data + 'user/' + post.author.avatar[0].filename" v-if="post.author.avatar[0].filename!==null"/>
+        <p>{{post.author.username }}</p>
+      </div>
 
 				<div class="locname">
 					<p>{{ post.location.name }}</p>
 				</div>
 
-				<div class="loc-info">
-					<p>
-						{{ firstTag + "・" }}
-						<span class="price">{{ price[post.location.price] }}</span>
-					</p>
-				</div>
-			</div>
-			<img :src="'http://localhost/ntu-eat/data-img/post/' + post.post.images[0]" />
-		</router-link>
-	</div>
+      <div class="loc-info">
+        <p>
+          {{firstTag +"・"}}
+          <span class="price">{{price[post.location.price]}}</span>
+        </p>
+      </div>
+    </div>
+    <img :src="data + 'post/' + post.post.images[0]" />
+    </router-link>
+  </div>
+  
 </template>
 
 <script>
+import { getData } from "@/GlobalSettings";
 export default {
 	name: "NePost",
 	props: {
 		post: Object
 	},
 
-	created() {
-		if (this.post.post.tags.length > 0) {
-			this.firstTag = this.post.post.tags[0].name
-		} else {
-			this.firstTag = "none"
-		}
-	},
+  created() {
+    if (this.post.post.tags.length > 0) {
+      this.firstTag =  this.post.post.tags[0].name
+    } else {
+      this.firstTag =  "none"
+    }
+  },
+
+  setup() {
+    const data = getData();
+    return {
+      data,
+    };
+  },
 
 	data() {
 		return {

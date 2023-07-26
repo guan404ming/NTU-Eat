@@ -15,7 +15,7 @@
       
       <Swiper :modules="modules"
         :pagination="{ clickable: true }">
-	      <swiper-slide v-for="(image, i) in post.post.images" :key="i"><img :src="'http://localhost/ntu-eat/data-img/post/' + image"/></swiper-slide>
+	      <swiper-slide v-for="(image, i) in post.post.images" :key="i"><img :src="data + 'post/' + image"/></swiper-slide>
       </Swiper>
 
       <VueShowdown class="content">{{ post.post.content }}</VueShowdown>
@@ -29,10 +29,12 @@
     <div class="author">
       <img
         :src="
-          'http://localhost/ntu-eat/data-img/user/' +
+          this.data + 'user/' +
           post.author.avatar[0].filename
         "
+        v-if="post.author.avatar[0].filename !== null"
       />
+      <span class="material-symbols-outlined avatar" v-else>account_circle</span>
       <router-link :to="'/authorpostlist/' + post.author.userId">
         <p class="">作者簡介</p>
         <p class="name">{{ post.author.username }}</p>
@@ -158,13 +160,21 @@
     flex-shrink: 0;
     margin-top: 12px;
   }
+  span {
+    font-size: 54px;
+    color: #707070;
+    margin-top: 12px;
+    vertical-align: middle;
+    font-variation-settings:
+        'wght' 300,
+  }
 }
 </style>
 
 
 <script>
 import NeHeader from "@/components/NeHeader.vue";
-import { getApi, popup } from "@/GlobalSettings";
+import { getApi, popup, getData } from "@/GlobalSettings";
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import 'swiper/css'
 import { Navigation, Pagination } from 'swiper'
@@ -186,9 +196,11 @@ export default {
 
   setup() {
     const api = getApi();
+    const data = getData();
     return {
       api,
       popup,
+      data,
       modules: [Navigation, Pagination]
     };
   },
@@ -241,6 +253,7 @@ export default {
     },
 
     createPostView(params) {
+      let loader = this.$loading.show()
       const _this = this;
       _this.axios
         .get(_this.api + "post/list/by-id/?p=" + params.postId, {
@@ -250,9 +263,11 @@ export default {
           if (res.data.state === "success") {
             this.post = res.data.data.post;
             this.isDone = true
+            loader.hide()
           } else {
             const errorMsg = res.data.error;
             console.log(errorMsg)
+            loader.hide()
             this.popup('無此貼文', '返回首頁', 'question')
             this.setRedirection()
           }

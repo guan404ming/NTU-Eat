@@ -376,37 +376,40 @@ export default {
             this.isUploaded = true;
         },
 
-        handleCreatePost() {
-            const _this = this;
-            const tagsString = this.getTagsString();
-            const postformdata = new FormData();
-            postformdata.append("placeId", _this.placeId);
-            postformdata.append("content", _this.content);
-            postformdata.append("tags", tagsString);
-            postformdata.append("isPublic", true);
-            for (var i = 0; i < _this.photo.length; i++) {
-                postformdata.append("photo[]", this.photo[i]);
-            }
+    handleCreatePost() {
+      let loader = this.$loading.show()
+      const _this = this;
+      const tagsString = this.getTagsString();
+      const postformdata = new FormData();
+      postformdata.append("placeId", _this.place.placeId);
+      postformdata.append("content", _this.content);
+      postformdata.append("tags", tagsString);
+      postformdata.append("isPublic", true);
+      for (var i = 0; i < _this.photo.length; i++) {
+        postformdata.append("photo[]", this.photo[i]);
+      }
 
-            _this.axios
-                .post(_this.api + "post/create/", postformdata, {
-                    withCredentials: true,
-                })
-                .then((res) => {
-                    if (res.data.state === "success") {
-                        this.findNewestPost();
-                        _this.popup("文章已成功發布", "現在查看", "success");
-                        this.setRedirection();
-                    } else {
-                        const errorMsg = res.data.error;
-                        console.log(errorMsg);
-                        _this.checkError(errorMsg);
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        },
+      _this.axios
+        .post(_this.api + "post/create/", postformdata, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          if (res.data.state === "success") {
+            this.findNewestPost();
+            loader.hide()
+            _this.popup("文章已成功發布", "現在查看", "success");
+            this.setRedirection();
+          } else {
+            const errorMsg = res.data.error;
+            console.log(errorMsg);
+            loader.hide()
+            _this.checkError(errorMsg);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
 
         checkError(errorMsg) {
             // check placeId error

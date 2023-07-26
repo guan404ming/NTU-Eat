@@ -47,6 +47,7 @@ export default {
 
   methods: {
     getAllPost() {
+      let loader = this.$loading.show()
       const _this = this;
       _this.axios
         .get(_this.api + "post/list/?page=0&eachPageNum=8&", {
@@ -59,6 +60,7 @@ export default {
             const errorMsg = res.data.error;
             console.log(errorMsg);
           }
+          loader.hide()
         })
         .catch(function (error) {
           console.log(error);

@@ -4,7 +4,8 @@
     <div class="container">
       <h1>編輯個人檔案</h1>
 
-      <img :src="avatar" :class="{ 'no-pic': user.removeAvatar }" />
+      <img :src="avatar" v-if="!user.noAvatar && avatar !== null" />
+      <span class="material-symbols-outlined" v-if="user.noAvatar || avatar == null">account_circle</span>
       <a @click="this.handleUploadAvatar()">更換您的頭貼</a>
 
       <div class="inputsection">
@@ -55,9 +56,16 @@
     max-height: 300px;
     object-fit: cover;
     vertical-align: middle;
-    &.no-pic {
-      display: none;
-    }
+  }
+  span{
+    margin-top: 10px;
+    font-size: 16vw;
+    max-height: 300px;
+    max-height: 300px;
+    vertical-align: middle;
+    color: #707070;
+    font-variation-settings:
+        'wght' 300,
   }
   a {
     display: block;
@@ -106,7 +114,7 @@
 <script>
 import NeHeader from "@/components/NeHeader.vue";
 import NeGoButton from "@/components/NeGoButton.vue";
-import { getApi, popup } from "@/GlobalSettings.js";
+import { getApi, popup, getData } from "@/GlobalSettings.js";
 
 export default {
   name: "UpdateProfile",
@@ -117,9 +125,11 @@ export default {
 
   setup() {
     const api = getApi();
+    const data = getData();
     return {
       api,
       popup,
+      data
     };
   },
 
@@ -132,7 +142,7 @@ export default {
       user: {
         targetUserId: null,
         avatar: null,
-        removeAvatar: false,
+        noAvatar: false,
         displayName: "",
         description: "",
       },
@@ -143,6 +153,7 @@ export default {
 
   methods: {
     getUserInfo() {
+      let loader = this.$loading.show()
       const _this = this;
       _this.axios
         .get(_this.api + "user/info/", { withCredentials: true })
@@ -150,15 +161,20 @@ export default {
           if (res.data.state === "success") {
             this.username = res.data.data.user.username;
             this.user.targetUserId = res.data.data.user.id;
-            this.avatar =
-              "http://localhost/ntu-eat/data-img/user/" +
+            if (res.data.data.superUser.avatar[0].filename == null) {
+              this.avatar = null
+            } else {
+              this.avatar =
+              this.data + "user/" +
               res.data.data.superUser.avatar[0].filename;
+            }
             this.user.description = res.data.data.superUser.description;
             this.user.displayName = res.data.data.superUser.displayName;
           } else {
             const errorMsg = res.data.error;
             console.log(errorMsg);
           }
+          loader.hide()
         })
         .catch(function (error) {
           console.log(error);
@@ -178,8 +194,6 @@ export default {
           if (!res.data.state === "success") {
             const errorMsg = res.data.error;
             this.checkError(errorMsg);
-          } else {
-            console.log(res);
           }
         })
         .catch(function (error) {
@@ -211,11 +225,11 @@ export default {
     handleUpdateProfile() {
       const _this = this;
       const profileformdata = new FormData();
-      // profileformdata.append('targetUserId', _this.user.targetUserId)
-      if (!_this.user.removeAvatar) {
+      let loader = this.$loading.show()
+      if (!_this.user.noAvatar) {
         profileformdata.append("avatar", _this.user.avatar);
       } else {
-        profileformdata.append("removeAvatar", _this.user.removeAvatar);
+        profileformdata.append("noAvatar", this.user.noAvatar);
       }
       profileformdata.append("displayName", _this.user.displayName);
       profileformdata.append("description", _this.user.description);
@@ -226,6 +240,8 @@ export default {
         })
         .then((res) => {
           if (res.data.state === "success") {
+            loader.hide()
+            localStorage.clear();
             _this.popup("個人檔案已成功編輯", "返回", "success");
             this.setRedirection();
           } else {
@@ -263,8 +279,8 @@ export default {
         })
         .then((result) => {
           if (result.isDenied) {
-            this.photo = "";
-            this.removeAvatar = true;
+            this.avatar = "";
+            this.user.noAvatar = true;
           } else if (result.isConfirmed) {
             this.$swal
               .fire({
@@ -284,8 +300,8 @@ export default {
               .then((res) => {
                 const link = URL.createObjectURL(res.value);
                 this.user.avatar = res.value;
-                this.avatarLink = link;
-                this.user.removeAvatar = false;
+                this.avatar = link;
+                this.user.noAvatar = false;
               })
               .catch((error) => {
                 console.log(error);

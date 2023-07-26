@@ -1,16 +1,23 @@
 <template>
   <router-link class="post" :to="'/post/'+ post.postId">
-    <img :src="'http://localhost/ntu-eat/data-img/post/' + post.post.images[0]" />
+    <img :src="data + 'post/' + post.post.images[0]" />
     <p class="authorname">{{ post.author.username }}</p>
     <p class="locname">{{ post.location.name }}</p>
   </router-link>
 </template>
 
 <script>
+import { getData } from "@/GlobalSettings";
 export default {
   name: "NePopPost",
   props: {
     post: Object,
+  },
+  setup() {
+    const data = getData();
+    return {
+      data,
+    };
   },
 };
 </script>

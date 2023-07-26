@@ -1,6 +1,5 @@
 <template>
   <header>
-    
     <router-link to="/">
       <h1>NTU EAT</h1>
     </router-link>
@@ -22,9 +21,8 @@
       <router-link to="#">
         <span class="material-symbols-outlined">bookmark</span>
       </router-link>
-      
       <router-link to="/profile">
-        <img :src="avatar" v-if="userRole > 3">
+        <img :src="avatar" v-if="userRole > 3 && (avatar !== null)">
         <span class="material-symbols-outlined avatar" v-else>account_circle</span>
       </router-link>
 
@@ -96,28 +94,31 @@ header{
   .notLoggedin.display{
     display: none;
   }
+  .vld-overlay{
+    backdrop-filter: blur(2px);
+  }
 }
 </style>
 
 
 <script>
-import { getApi } from '@/GlobalSettings.js'
-
+import { getApi, getData } from '@/GlobalSettings.js'
 export default {
   name: 'NeHeader',
-  
   data() {
     return {
       status: false,
       userRole: null,
-      avatar: null
+      avatar: null,
     }
   },
 
   setup() {
     const api = getApi();
+    const data = getData();
     return{
-      api
+      api,
+      data
     }
   },
 
@@ -128,39 +129,54 @@ export default {
   methods: {
     getUserStatus() {
       const _this = this
-      this.axios.get(_this.api + "user/status/", {withCredentials: true})
-      .then((res) => {
-        if (res.data.data.status){
-          _this.status = res.data.data.status.isLoggedIn
-          _this.userRole = res.data.data.status.userRole.num
-          if (this.userRole >= 5) {
-            this.getAvatar()
+      if (localStorage.getItem('loginState')) {
+        this.status = localStorage.getItem('loginState')
+        this.userRole = localStorage.getItem('userRole')
+        this.getAvatar()
+      } else {
+        this.axios.get(_this.api + "user/status/", {withCredentials: true})
+        .then((res) => {
+          if (res.data.data.status){
+            _this.status = res.data.data.status.isLoggedIn
+            _this.userRole = res.data.data.status.userRole.num
+            if (this.userRole >= 5) {
+              this.getAvatar()
+            }
+          } else{
+            const errorMsg = res.data.data.status
+            console.log(errorMsg)
           }
-        } else{
-          const errorMsg = res.data.data.status
-          console.log(errorMsg)
-        }
-      })
-      .catch(function(error) {
-        console.log(error)
-      })
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+      }
     },
 
     getAvatar() {
       const _this = this
-      this.axios.get(_this.api + "user/info/", {withCredentials: true})
-      .then((res) => {
-        if (res.data.data){
-          this.avatar = 'http://localhost/ntu-eat/data-img/user/' + res.data.data.superUser.avatar[0].filename
-        } else{
-          const errorMsg = res.data.data
-          console.log(errorMsg)
-        }
-      })
-      .catch(function(error) {
-        console.log(error)
-      })
-    }
+      if (localStorage.getItem('avatar')) {
+        this.avatar = localStorage.getItem('avatar')
+      } else {
+        this.axios.get(_this.api + "user/info/", {withCredentials: true})
+        .then((res) => {
+          if (res.data.data){
+            if (res.data.data.superUser.avatar[4].filename == null) {
+              this.avatar = null
+            } else{
+              this.avatar = this.data + 'user/' + res.data.data.superUser.avatar[4].filename
+              localStorage.setItem('avatar', this.data + 'user/' + res.data.data.superUser.avatar[4].filename)
+            }
+          } else{
+            const errorMsg = res.data.data
+            console.log(errorMsg)
+          }
+        })
+        .catch(function(error) {
+          console.log(error)
+        }) 
+      }
+    },
   }
 }
 </script>

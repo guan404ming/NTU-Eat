@@ -4,17 +4,24 @@
 
     <h1>註冊新帳號</h1>
     
-    <ne-inputbar icon="email" placeholder="請輸入您的電子郵件" v-model="email" />
-    <ne-inputbar icon="account_circle" placeholder="請設定您的用戶名稱" v-model="username" />
-    
-    <div :class="{ 'error': hasError }">
+    <div>
+      <ne-inputbar icon="email" placeholder="請輸入您的電子郵件" v-model="email" />
+      <p>{{usernameError.errorMsg}}</p>
+    </div>
+
+    <div :class="{ 'error': usernameError.state }">
+      <ne-inputbar icon="account_circle" placeholder="請設定您的用戶名稱" v-model="username" />
+      <p>{{usernameError.errorMsg}}</p>
+    </div>
+
+    <div :class="{ 'error': passwordError.state }">
       <ne-inputbar icon="password" placeholder="請設定您的密碼" type="password" v-model="password" />
-      <p>密碼不一致，請重新輸入</p>
+      <p>{{passwordError.errorMsg}}</p>
     </div>
     
-    <div :class="{ 'error': hasError }">
-      <ne-inputbar icon="password" placeholder="再輸入一次您的密碼" type="password" v-model="password_confirm" />
-      <p>密碼不一致，請重新輸入</p>
+    <div :class="{ 'error': passwordError.state }">
+      <ne-inputbar icon="password" placeholder="再輸入一次您的密碼" type="password" v-model="passwordConfirm" />
+      <p>{{passwordError.errorMsg}}</p>
     </div>
 
     <span>我們將寄出一封驗證信到您的信箱</span>
@@ -47,6 +54,12 @@
       color: #EF4E4E;
       display: block;
       visibility: hidden;
+      height: 17px;
+    }
+    .inputbar{
+      :deep input{
+        border: 1px solid transparent;
+      }
     }
     .error{
       p{
@@ -79,8 +92,16 @@
         email: '',
         username: '',
         password: '',
-        password_confirm: '',
-        hasError: false,
+        passwordConfirm: '',
+        passwordError: false,
+        usernameError: {
+          state: false,
+          errorMsg: 'NO ERROR',
+        },
+        passwordError: {
+          state: false,
+          errorMsg: 'NO ERROR',
+        }
       }
     },
 
@@ -134,19 +155,22 @@
       },
 
       handleSignup() {
+        let loader = this.$loading.show()
         const _this = this
         const signupformdata = new FormData()
         signupformdata.append('email', _this.email)
         signupformdata.append('username', _this.username)
         signupformdata.append('password', _this.password)
-        signupformdata.append('passwordConfirm', _this.password_confirm)
+        signupformdata.append('passwordConfirm', _this.passwordConfirm)
 
         _this.axios.post(_this.api + "user/register/", signupformdata, {withCredentials: true})
         .then((res) => {
           if (res.data.state === 'success'){
+            loader.hide()
             _this.popup("註冊成功", "驗證您的帳號", "success")
             _this.setRedirection()
           }else{
+            loader.hide()
             const errorMsg = res.data.error
             _this.checkError(errorMsg)
           }
@@ -157,10 +181,52 @@
       },
 
       checkPassword() {
-        if (this.password === this.password_confirm || this.password_confirm === ''){
-          this.hasError = false
-        }else{
-          this.hasError = true
+        var errorTime = 0
+
+        if (this.password !== this.passwordConfirm && this.passwordConfirm !== ''){
+          errorTime += 1
+          this.passwordError.errorMsg = "密碼不一致"
+        }
+
+        if (this.password.length < 8) {
+          errorTime += 1
+          this.passwordError.errorMsg = "密碼長度需要介於8~30"
+        }
+
+        if (!(this.password.match(/[A-Z]{1,}[a-z]{1,}/gm) || this.password.match(/[a-z]{1,}[A-Z]{1,}/gm))) {
+          errorTime += 1
+          this.passwordError.errorMsg = "密碼必須包含大小寫英文"
+        }
+        
+        if (errorTime > 0 && (this.usernameConfirm !== '' && this.password !== '')) {
+          this.passwordError.state = true
+        } else {
+          this.passwordError.state = false
+        }
+      },
+
+      checkUsername() {
+        var errorTime = 0
+
+        if (!this.username.match(/^[A-Za-z0-9_.]{1,}$/)) {
+          errorTime += 1
+          this.usernameError.errorMsg = "用戶名稱包含非法字元"
+        }
+
+        if (this.username.length < 6) {
+          errorTime += 1
+          this.usernameError.errorMsg = "用戶名稱長度需要介於6~18位"
+        }
+
+        if (this.username.match(/^[0-9]/)){
+          errorTime += 1
+          this.usernameError.errorMsg = "用戶名稱不能以數字開頭"
+        }
+        
+        if (errorTime > 0 && this.username != '') {
+          this.usernameError.state = true
+        } else {
+          this.usernameError.state = false
         }
       },
 
@@ -191,9 +257,12 @@
       "password": function(){
         this.checkPassword()
       },
-      "password_confirm": function(){
+      "passwordConfirm": function(){
         this.checkPassword()
-      }
+      },
+      "username": function() {
+        this.checkUsername()
+      },
     }
   }
 </script>
