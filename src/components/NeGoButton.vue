@@ -1,18 +1,18 @@
 <template>
-  <button>GO</button>
+    <button>GO</button>
 </template>
 
 <script>
-  export default {
+export default {
     name: 'NeGoButton',
     props: {
-      click: Text
+        click: Text
     }
-  }
+}
 </script>
 
 <style scoped lang="scss">
-  button{
+button {
     background-color: #EBDECE;
     margin: 28px auto 24px auto;
     display: block;
@@ -23,8 +23,8 @@
     text-align: center;
     line-height: 30px;
     color: #000000;
-    font-size: 18px; 
+    font-size: 18px;
     font-weight: 600;
     cursor: pointer;
-  }
+}
 </style>
